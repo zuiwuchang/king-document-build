@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>{{.title}}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=0.8">
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=0.8">
+	<link rel="stylesheet" type="text/css" href="/public/css/bootstrap-3.3.6.min.css">
+	<link rel="shortcut icon" type="image/png" href="/public/img/favicon.png">
+	<script src="/public/js/jquery-1.9.1.min.js"></script>
+	<script src="/public/js/bootstrap-3.3.6.min.js"></script>
+</head>
+<style type="text/css">
+body{
+	background-color: #eee;
+}
+.kc-browse-view{
+	text-align: left;
+	padding: 16px;
+}
+.kc-browse-title{
+	font-size: 36px;
+}
+.kc-browse-text{
+	font-size: 24px;
+	font-weight: 200;
+}
+.kc-browse-down{
+	font-size: 28px;
+}
+.kc-browse-down{
+	margin-top: 16px;
+}
+a{
+	font-size: 18px;
+}
+</style>
+<body>
+
+<div class="kc-browse-view">
+	<p class="kc-browse-title">{{msg . "Your browser is too old"}}</p>
+	<p class="kc-browse-text">{{msg . "This browser is not supported"}}</p>
+	<p class="kc-browse-text">{{msg . "Please use a modern browser"}}</p>
+
+	<div class="kc-browse-down">
+		<div class="kc-browse-down">{{msg . "Download Modern Browse"}}</div>
+	
+		<div><a target="_blank" href="https://www.mozilla.org/">{{msg . "download firefox"}}</a></div>
+		<div><a target="_blank" href="https://www.google.com/chrome">{{msg . "download chrome"}}</a></div>
+		<div><a target="_blank" href="https://vivaldi.com/">{{msg . "download vivaldi"}}</a></div>
+	</div>
+</div>
+{{if eq .RunMode "dev"}}
+<div id="idView"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var html = "<p>" + navigator.appName + "</p>";
+	html += "<p>" + navigator.appVersion + "</p>";
+	$("#idView").html(html);
+});
+</script>
+{{template "debug.html" .}}
+{{end}}
+</body>
+</html>
+

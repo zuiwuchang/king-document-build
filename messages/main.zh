@@ -1,0 +1,23 @@
+Home=首頁
+Language=語言
+About=關於
+Browse=瀏覽
+Edit=編輯
+Login=登入
+Logout=登出
+
+Edit Documetn=編輯檔案
+New Documetn=新建檔案
+
+#browse
+Your browser is too old=你使用的瀏覽器版本太低
+This browser is not supported=已經不再支持此瀏覽器
+Please use a modern browser=請使用現代瀏覽器訪問
+Download Modern Browse=下載現代瀏覽器
+download firefox=download firefox
+download chrome=download chrome
+download vivaldi=download vivaldi
+
+#login
+Please enter your password=請輸入密碼
+Password=密碼
