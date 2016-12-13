@@ -12,6 +12,11 @@
 	<script src="/public/js/jquery-2.2.4.min.js"></script>
 	<script src="/public/js/bootstrap-3.3.6.min.js"></script>
 
+	<link rel="stylesheet" type="text/css" href="/public/js/jquery-ui/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="/public/js/jquery-ui/jquery-ui.structure.min.css">
+	<link rel="stylesheet" type="text/css" href="/public/js/jquery-ui/jquery-ui.theme.min.css">
+	<script src="/public/js/jquery-ui/jquery-ui.min.js"></script>
+	
 	<!--	king-js	-->
 {{if eq .RunMode "dev"}}
 	<script src="/public/js/king-js/core.min.js"></script>
@@ -23,7 +28,7 @@
 	<link rel="stylesheet" type="text/css" href="/public/css/main.css">
 
 </head>
-<body>
+<body class="k-body">
 <!-- 檢測瀏覽器版本 -->
 {{template "browser.html" .}}
 

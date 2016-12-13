@@ -1,8 +1,13 @@
 .k-footer-docs{
-	color: #777;
 	text-align: center;
 	padding-top: 16px;
+	padding-bottom: 55px;
 }
+
 .k-view{
-	margin-top: 58px;
+	margin-top: 50px;
+}
+.k-target{
+	padding-top: 50px;
+	margin-top: -50px;
 }
