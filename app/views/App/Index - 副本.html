@@ -1,0 +1,73 @@
+{{set . "title" (msg . "Home")}}
+{{template "header.html" .}}
+
+<link rel="stylesheet" type="text/css" href="/public/data/opt/code-prettify/src/prettify.css">
+<link rel="stylesheet" type="text/css" href="/public/data/opt/code-prettify/styles/sunburst-line.css">
+<script src="/public/data/opt/code-prettify/src/prettify.js"></script>
+
+<div class="container k-view">
+
+<pre class="prettyprint linenums">
+  package main
+
+import (
+  "encoding/json"
+  "fmt"
+  "io/ioutil"
+  "os"
+)
+
+type JSON struct {
+  Data []NOTE `json:"root"`
+}
+type NOTE struct {
+  Url  string
+  Note string
+}
+
+func main() {
+  //讀
+  file, err := os.Open("my.json")
+  if err != nil {
+    fmt.Printf("error: %v", err)
+    return
+  }
+  defer file.Close()
+  data, err := ioutil.ReadAll(file)
+  if err != nil {
+    fmt.Printf("error: %v", err)
+    return
+  }
+  j := JSON{}
+  err = json.Unmarshal(data, &j)
+  if err != nil {
+    fmt.Printf("error: %v", err)
+    return
+  }
+  fmt.Println(j)
+
+  //寫
+  b, e := json.Marshal(j)
+  if e != nil {
+    fmt.Println(e)
+    return
+  }
+  os.Stdout.Write(b)
+  os.Stdout.Write([]byte("\n\n"))
+
+  b, e = json.MarshalIndent(j, "", "  ")
+  if e != nil {
+    fmt.Println(e)
+    return
+  }
+  os.Stdout.Write(b)
+}
+</pre>
+</div>
+{{template "footer.html" .}}
+
+<script type="text/javascript">
+$(document).ready(function() {
+  prettyPrint ();
+});
+</script>

@@ -1,0 +1,87 @@
+{{set . "title" (msg . "tag.Title")}}
+{{template "header.html" .}}
+
+
+<div class="container k-view">
+
+<div class="panel panel-default">
+<div class="panel-heading">{{msg . "tag.Title"}}</div>
+<div class="panel-body">
+	<div id="idViewMsg"></div>
+	<div id="idTree">
+	</div>
+</div>
+</div>
+	
+</div>
+
+
+<!--	modal parent	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalParent" id="idBtnModal" style="display: none;">Open Modal</button>
+
+<div id="idModalParent" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">{{msg . "tag.modal parent"}}</h4>
+	</div>
+
+	<div class="modal-body">
+	<p id="idModalParentWait">{{msg . "tag.wait search parent"}}</p>
+	<p><div id="idModalParentTree"></div></p>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">{{msg . "Cancel"}}</button>
+	</div>
+	</div>
+</div>
+</div>
+
+{{template "footer.html" .}}
+
+<link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
+<script src="/public/js/jstree/jstree.min.js"></script>
+
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/Tag/Admin.js"></script>
+{{else}}
+	<script src="/public/views/Tag/Admin.min.js"></script>
+{{end}}
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var ctx = NewContext({
+		Language:{
+			"err net":{{msg . "err net"}},
+
+			"create":{{msg . "tag.Create"}},
+			"move":{{msg . "tag.Move"}},
+			"edit":{{msg . "tag.Edit"}},
+			"erase":{{msg . "tag.Erase"}},
+
+			"new tag":{{msg . "tag.new tag"}},
+		},
+		Data:[
+			{
+				id:'0',
+				parent:'#',
+				text:'{{msg . "tag.TagTree"}}',
+			},
+{{range .tags}}
+			{
+				id:'{{.Id}}',
+				parent:'{{.Pid}}',
+				text:'{{.Name}}',
+			},
+{{end}}
+		],
+	});
+});
+</script>

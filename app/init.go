@@ -26,19 +26,8 @@ func init() {
 	// ( order dependent )
 	// revel.OnAppStart(InitDB)
 	// revel.OnAppStart(FillCache)
-
-	//自定義 初始化 回調
 	revel.OnAppStart(func() {
-		defer func() {
-			//捕獲異常
-			if err := recover(); err != nil {
-				revel.ERROR.Println(err)
-			}
-
-			//初始化 數據庫 引擎
-			manipulator.Initialize()
-
-		}()
+		manipulator.Initialize()
 	})
 }
 

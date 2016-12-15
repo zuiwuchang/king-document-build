@@ -9,5 +9,6 @@ type Edit struct {
 }
 
 func (c Edit) New() revel.Result {
+
 	return c.Render()
 }
