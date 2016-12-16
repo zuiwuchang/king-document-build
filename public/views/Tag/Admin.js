@@ -1,6 +1,6 @@
 var NewContext = function(initObj){
 	var language = initObj.Language;
-
+	var TREE_ROOT_ID = '0';
 	//msg
 	var MESSAGE_SUCCESS		= 0;
 	var MESSAGE_INFO		= 1;
@@ -27,26 +27,101 @@ var NewContext = function(initObj){
 		jqViewMsg.hide("fast");
 	};
 	//
+	var newModalMsg = function(){
+		var jqBtnShow = $("#idBtnModalMsg");
+		var jqTitle = $("#idModalMsgTitle");
+		var jqBody = $("#idModalMsgBody");
+
+		var jqSure = $("#idModalMsgSure");
+		var jqCancel = $("#idModalMsgCancel");
+		var onOk = null;
+		var newObj = {
+			Show:function(title,text,callback){
+				if(callback){
+					onOk = callback;
+				}
+
+				jqTitle.html(title);
+				jqBody.html(text);
+
+				jqBtnShow.click();
+			},
+			Hide:function(){
+				jqCancel.click();
+			},
+		};
+		jqSure.click(function(event) {
+			if(onOk){
+				onOk(newObj);
+			}else{
+				jqCancel.click();
+			}
+		});
+		return newObj;
+	};
+	var modal = newModalMsg();
+	
+
+	//
 	var newModalParent = function(){
 		var ID_NONE = -1;
 		var jqBtn = $("#idBtnModal");
 		var jqWait = $("#idModalParentWait");
 		var jqTree = $("#idModalParentTree");
 
+		var jaSure = $("#idModalParentSure");
+		var jaCancel = $("#idModalParentCancel");
+		var onOk = null;
+		jaSure.click(function(event) {
+			if(onOk){
+				var tree = jqTree.jstree(true);
+				if(tree){
+					var id = tree.get_selected();
+					id = id[0];
+					if(id && id != ""){
+						onOk(id);
+						jaCancel.click();
+					}else{
+						modal.Show(language["err err"],language["err no set pid"]);
+					}
+				}
+			}
+		});
+
 		return {
-			Show:function(data){
+			Show:function(data,callback){
+				if(callback){
+					onOk = callback;
+				}
+
 				jqBtn.click();
 				var pid = -1;
 				jqWait.show();
 				jqTree.hide();
 
-				jqTree.destroy();
-				jqTree.
+				var tree = jqTree.jstree(true);
+				if(tree){
+					tree.destroy();
+				}
+				jqTree.jstree({
+					plugins : [ 
+						"sort",
+						"conditionalselect",
+					],
+					conditionalselect:function(){
+						this.deselect_all(true);
+						return true;
+					},
+					core:{
+						data:data,
+					},
+				}).on("ready.jstree",function(){
+					jqWait.hide();
+					jqTree.show();
+				});
 			},
 		};
 	};
-	var modalParent = newModalParent();
-
 	//tree
 	var newTree = function(){
 		var _enable = true;
@@ -61,25 +136,94 @@ var NewContext = function(initObj){
 			}
 		};
 
+		//modal
+		var modalParent = newModalParent();
+		
+
 		var jq = $("#idTree");
 		var icon = "/public/js/jstree/themes/default/throbber.gif";
 		var getCanParent = function(id){
 			var arrs = [];
-
+			var tree = jq.jstree(true);
+			findCanParent(tree,arrs,id,TREE_ROOT_ID);
 			return arrs;
 		};
-		jq.jstree({
-			plugins : [ 
+		var findCanParent = function(tree,arrs,fid,id){
+			var node = tree.get_node(id);
+			if(!node){
+				return;
+			}
+			if(node.id == fid){
+				return;
+			}
+			var open = false;
+			if(node.id == TREE_ROOT_ID){
+				open = true;
+			};
+			arrs.push({
+				id:node.id,
+				parent:node.parent,
+				text:node.text,
+				state:{
+					opened:open,
+				},
+			});
+
+			if(tree.is_leaf(node)){
+				return;
+			}
+
+			var childs = node.children;
+			for (var i = 0; i < childs.length; i++) {
+				if(childs[i] != fid){
+					findCanParent(tree,arrs,fid,childs[i]);
+				}
+			}
+		};
+		var ajaxRemove = function(tree,node){
+			if(!isEnable()){
+				return;
+			}
+			enable(false);
+			tree.set_icon(node,icon);
+			hideMsg();
+
+			$.ajax({
+				url: '/Tag/AjaxRemove',
+				type: 'POST',
+				dataType: 'json',
+				data: {id: node.id},
+			}).done(function(result) {
+				if(0 == result.Code){
+					tree.delete_node(node);
+				}else{
+					showMsg(result.Emsg,MESSAGE_DANGER);
+				}
+			}).fail(function() {
+				showMsg(language["err net"],MESSAGE_DANGER);
+			}).always(function() {
+				tree.set_icon(node);
+				enable(true);
+			});
+			
+		};
+		jq.hide().jstree({
+			plugins : [
+				"conditionalselect",
 				"contextmenu",
 				"sort",
 			],
+			conditionalselect:function(){
+				this.deselect_all(true);
+				return true;
+			},
 			contextmenu:{
 				items:function(node){
 					if(!isEnable()){
 						return;
 					}
 
-					var tree = jq.jstree(true);
+					var tree = this;
 					var id = node.id;
 
 					var createItem = {
@@ -152,7 +296,53 @@ var NewContext = function(initObj){
 								}
 								var arrs = getCanParent(id);
 								modalParent.Show(arrs,function(id){
-									//ajax
+									if(!isEnable()){
+										return;
+									}
+
+									if(id == node.id){
+										return;
+									}
+									var pid = tree.get_parent(node);
+									if(pid == id){
+										return;
+									}
+									pid = id;
+									id = node.id;
+
+									var parent = tree.get_node(pid);
+									if(!parent){
+										return;
+									}
+
+									enable(false);
+									tree.set_icon(node,icon);
+									hideMsg();
+									$.ajax({
+										url: '/Tag/AjaxMove',
+										type: 'POST',
+										dataType: 'json',
+										data: {
+											'id':id,
+											'pid':pid,
+										},
+									})
+									.done(function(result) {
+										if(0 == result.Code){
+											tree.cut(node);
+											tree.paste(parent)
+											tree.open_node(parent);
+										}else{
+											showMsg(result.Emsg,MESSAGE_DANGER);
+										}
+									})
+									.fail(function() {
+										showMsg(language["err net"],MESSAGE_DANGER);
+									})
+									.always(function() {
+										tree.set_icon(node);
+										enable(true);
+									});
 								});
 							},
 						},
@@ -165,6 +355,12 @@ var NewContext = function(initObj){
 								if(!isEnable()){
 									return;
 								}
+								var text = "<p>" + language["erase tag"] + " - " + tree.get_text(node) + 
+									"</p><p>" + language["sure?"] + "</p>";
+								modal.Show(language["warning"],text,function(modal){
+									modal.Hide();
+									ajaxRemove(tree,node);
+								});
 							},
 						},
 					};
@@ -174,8 +370,10 @@ var NewContext = function(initObj){
 				check_callback : true,
 				data:initObj.Data,
 			},
+		}).on("ready.jstree",function(){
+			$(this).show();
 		}).on("rename_node.jstree",function(e,obj){
-			var tree = jq.jstree(true);
+			var tree = $(this).jstree(true);
 
 			var node = obj.node;
 			var text = obj.text;
@@ -218,11 +416,6 @@ var NewContext = function(initObj){
 				enable(true);
 			});
 		});
-		/*$("#idBtn").click(function(event) {
-			var tree = jq.jstree(true);
-			var node = tree.get_node('1');
-			tree.set_text(node,"123")
-		});*/
 		return {
 
 		};

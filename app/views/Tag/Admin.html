@@ -35,17 +35,45 @@
 	</div>
 
 	<div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal">{{msg . "Sure"}}</button>
-	<button type="button" class="btn btn-default" data-dismiss="modal">{{msg . "Cancel"}}</button>
+	<button type="button" class="btn btn-default" id="idModalParentSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalParentCancel">{{msg . "Cancel"}}</button>
 	</div>
-	</div>
+</div>
+
 </div>
 </div>
 
+
+
+<!--	modal msg	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalMsg" id="idBtnModalMsg" style="display: none;">Open Modal</button>
+
+<div id="idModalMsg" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title" id="idModalMsgTitle">title</h4>
+	</div>
+
+	<div class="modal-body">
+	<p id="idModalMsgBody">body</p>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalMsgSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalMsgCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
 {{template "footer.html" .}}
 
 <link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
-<script src="/public/js/jstree/jstree.min.js"></script>
+<script src="/public/js/jstree/jstree.js"></script>
 
 
 {{if eq .RunMode "dev"}}
@@ -67,12 +95,22 @@ $(document).ready(function() {
 			"erase":{{msg . "tag.Erase"}},
 
 			"new tag":{{msg . "tag.new tag"}},
+
+			"err err":{{msg . "tag.msg err"}},
+			"err no set pid":{{msg . "tag.msg no set pid"}},
+			"warning":{{msg . "tag.msg warning"}},
+			"erase tag":{{msg . "tag.msg erase"}},
+			"sure?":{{msg . "tag.msg are you sure"}},
+
 		},
 		Data:[
 			{
 				id:'0',
 				parent:'#',
 				text:'{{msg . "tag.TagTree"}}',
+				state:{
+					opened:true,
+				},
 			},
 {{range .tags}}
 			{

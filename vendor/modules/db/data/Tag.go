@@ -4,7 +4,7 @@ type Tag struct {
 	//唯一標識
 	Id int64
 	//父節點 根節點 pid == 0
-	Pid int64
+	Pid int64 `xorm:"index"`
 
 	//標籤名
 	Name string

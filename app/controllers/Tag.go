@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/revel/revel"
-	"king-document-build/app/modules/ajax"
-	"king-document-build/app/modules/db/data"
-	"king-document-build/app/modules/db/manipulator"
+	"modules/ajax"
+	"modules/db/data"
+	"modules/db/manipulator"
 )
 
 type Tag struct {
@@ -39,6 +39,26 @@ func (c Tag) AjaxRename(id int64, name string) revel.Result {
 	tag := data.Tag{Id: id, Name: name}
 	var mTag manipulator.Tag
 	err := mTag.Rename(&tag)
+	if err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+	}
+	return c.RenderJson(result)
+}
+func (c Tag) AjaxMove(id, pid int64) revel.Result {
+	var result ajax.Result
+	var mTag manipulator.Tag
+	err := mTag.Move(id, pid)
+	if err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+	}
+	return c.RenderJson(result)
+}
+func (c Tag) AjaxRemove(id int64) revel.Result {
+	var result ajax.Result
+	var mTag manipulator.Tag
+	err := mTag.AjaxRemove(id)
 	if err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
