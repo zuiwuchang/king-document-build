@@ -26,7 +26,7 @@ var NewContext = function(initObj){
 	var hideMsg = function(){
 		jqViewMsg.hide("fast");
 	};
-	//
+	//消息 對話框
 	var newModalMsg = function(){
 		var jqBtnShow = $("#idBtnModalMsg");
 		var jqTitle = $("#idModalMsgTitle");
@@ -62,7 +62,7 @@ var NewContext = function(initObj){
 	var modal = newModalMsg();
 	
 
-	//
+	//父節點 修改框
 	var newModalParent = function(){
 		var ID_NONE = -1;
 		var jqBtn = $("#idBtnModal");
@@ -122,6 +122,18 @@ var NewContext = function(initObj){
 			},
 		};
 	};
+
+	//子節點 排序框
+	var newModalSort = function(){
+		return {
+			Show:function(){
+
+			},
+		}
+	};
+	var modalSort = newModalSort();
+	modalSort.Show();
+
 	//tree
 	var newTree = function(){
 		var _enable = true;
@@ -217,6 +229,11 @@ var NewContext = function(initObj){
 				this.deselect_all(true);
 				return true;
 			},
+			sort:function(l, r){
+				var nodeL = this.get_node(l);
+				var nodeR = this.get_node(r);
+				return nodeL.data > nodeR.data?1:-1;
+			},
 			contextmenu:{
 				items:function(node){
 					if(!isEnable()){
@@ -226,6 +243,17 @@ var NewContext = function(initObj){
 					var tree = this;
 					var id = node.id;
 
+					var sortItem = {
+						label:language["sort"],
+						icon:"/public/img/sort_16px.ico",
+						"separator_before": true,
+						"separator_after": false,
+						action: function (obj) { 
+							if(!isEnable()){
+								return;
+							}
+						},
+					};
 					var createItem = {
 						label:language["create"],
 						icon:"/public/img/add_16px.ico",
@@ -233,6 +261,10 @@ var NewContext = function(initObj){
 							if(!isEnable()){
 								return;
 							}
+							var id = node.id;
+							var sort = node.children.length;
+
+
 							enable(false);
 							tree.set_icon(node,icon);
 							hideMsg();
@@ -244,6 +276,7 @@ var NewContext = function(initObj){
 								data: {
 									pid:id,
 									name:name,
+									sort:sort,
 								},
 							})
 							.done(function(result) {
@@ -252,6 +285,7 @@ var NewContext = function(initObj){
 										id:result.Value,
 										parent:id,
 										text:name,
+										data:sort,
 									});
 									tree.edit(newNode);
 								}else{
@@ -268,11 +302,15 @@ var NewContext = function(initObj){
 						},
 					};
 					if(id == 0){
-						return {create:createItem};
+						return {
+							create:createItem,
+							sort:sortItem,
+						};
 					}
 
 					return {
 						create:createItem,
+						sort:sortItem,
 						edit:{
 							label:language["edit"],
 							icon:"/public/img/why_16px.ico",

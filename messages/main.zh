@@ -12,6 +12,7 @@ app.Tags=標籤管理
 tag.Title=標籤管理
 tag.TagTree=標籤樹
 tag.Create=創建子標籤
+tag.Sort=排序子標籤
 tag.Move=修改父標籤
 tag.Edit=修改名稱
 tag.Erase=刪除標籤

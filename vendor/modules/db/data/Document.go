@@ -23,7 +23,7 @@ type Panel struct {
 	Name string
 
 	//面板 顯示 順序
-	Sort int
+	Sort int64
 }
 
 //面板 節點
@@ -38,5 +38,5 @@ type Section struct {
 	Name string
 
 	//節點 顯示 順序
-	Sort int
+	Sort int64
 }

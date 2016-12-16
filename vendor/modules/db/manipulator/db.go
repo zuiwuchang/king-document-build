@@ -82,6 +82,10 @@ func initTable(bean interface{}) {
 		if err = g_engine.CreateIndexes(bean); err != nil {
 			panic(err)
 		}
+	} else {
+		if err = g_engine.Sync2(bean); err != nil {
+			panic(err)
+		}
 	}
 }
 func GetEngine() *xorm.Engine {

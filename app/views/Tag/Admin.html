@@ -90,6 +90,7 @@ $(document).ready(function() {
 			"err net":{{msg . "err net"}},
 
 			"create":{{msg . "tag.Create"}},
+			"sort":{{msg . "tag.Sort"}},
 			"move":{{msg . "tag.Move"}},
 			"edit":{{msg . "tag.Edit"}},
 			"erase":{{msg . "tag.Erase"}},
@@ -117,6 +118,7 @@ $(document).ready(function() {
 				id:'{{.Id}}',
 				parent:'{{.Pid}}',
 				text:'{{.Name}}',
+				data:{{.Sort}},
 			},
 {{end}}
 		],

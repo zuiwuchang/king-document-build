@@ -9,6 +9,9 @@ type Tag struct {
 	//標籤名
 	Name string
 
+	//同級 標籤 顯示 順序
+	Sort int64
+
 	//標籤下 檔案數量
-	Docs int
+	Docs int64
 }
