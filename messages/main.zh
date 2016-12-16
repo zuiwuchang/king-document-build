@@ -25,3 +25,5 @@ tag.msg no set pid=你沒有選中任何父節點
 tag.msg warning=警告
 tag.msg erase=你正在刪除標籤
 tag.msg are you sure=此操作不可撤銷，請確認？
+
+tag.modal sort=排序標籤

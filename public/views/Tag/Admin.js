@@ -69,10 +69,10 @@ var NewContext = function(initObj){
 		var jqWait = $("#idModalParentWait");
 		var jqTree = $("#idModalParentTree");
 
-		var jaSure = $("#idModalParentSure");
-		var jaCancel = $("#idModalParentCancel");
+		var jqSure = $("#idModalParentSure");
+		var jqCancel = $("#idModalParentCancel");
 		var onOk = null;
-		jaSure.click(function(event) {
+		jqSure.click(function(event) {
 			if(onOk){
 				var tree = jqTree.jstree(true);
 				if(tree){
@@ -80,7 +80,7 @@ var NewContext = function(initObj){
 					id = id[0];
 					if(id && id != ""){
 						onOk(id);
-						jaCancel.click();
+						jqCancel.click();
 					}else{
 						modal.Show(language["err err"],language["err no set pid"]);
 					}
@@ -125,14 +125,59 @@ var NewContext = function(initObj){
 
 	//子節點 排序框
 	var newModalSort = function(){
-		return {
-			Show:function(){
+		var jqBtn = $("#idBtnSort");
+		var jqBody = $("#idModalSortBody");
+		jqBody.sortable().disableSelection();
 
+		var jqSure = $("#idModalSortSure");
+		var jqCancel = $("#idModalSortCancel");
+		var onOk = null;
+		var oldArrs = null;
+		jqSure.click(function(event) {
+			jqCancel.click();
+			if(!onOk){
+				return;
+			}
+
+			var newArrs = [];
+			var modify = false;
+			jqBody.children('li').each(function(index, el) {
+				var id = $(el).data('id');
+
+				newArrs.push({
+					Id:id,
+					Sort:index,
+				});
+
+				if(!modify && id != oldArrs[index].Id){
+					modify = true;
+				}
+			});
+
+			if(modify){
+				onOk(newArrs);
+			}
+		});
+		return {
+			Show:function(arrs,callback){
+				oldArrs = arrs;
+				onOk = callback;
+
+				var html = "";
+				for (var i = 0; i < arrs.length; i++) {
+					var node = arrs[i];
+					html += "<li class='list-group-item' data-id='" + 
+						node.Id + "'>" + 
+						node.Name + "</li>";
+				}
+
+				jqBody.html(html);
+				jqBtn.click();
 			},
 		}
 	};
 	var modalSort = newModalSort();
-	modalSort.Show();
+	
 
 	//tree
 	var newTree = function(){
@@ -243,17 +288,74 @@ var NewContext = function(initObj){
 					var tree = this;
 					var id = node.id;
 
-					var sortItem = {
-						label:language["sort"],
-						icon:"/public/img/sort_16px.ico",
-						"separator_before": true,
-						"separator_after": false,
-						action: function (obj) { 
-							if(!isEnable()){
-								return;
-							}
-						},
-					};
+					var sortItem = null; 
+					if(node.children.length > 1){
+						sortItem = {
+							label:language["sort"],
+							icon:"/public/img/sort_16px.ico",
+							"separator_before": true,
+							"separator_after": false,
+							action: function (obj) { 
+								if(!isEnable()){
+									return;
+								}
+								var arrs = [];
+								for(var i=0;i<node.children.length;++i){
+									var tmp = tree.get_node(node.children[i]);
+									arrs.push({
+										Id:tmp.id,
+										Name:tmp.text,
+									});
+								}
+								modalSort.Show(arrs,function(arrs){
+									if(!isEnable()){
+										return;
+									}
+
+									var updateSort = function(arrs){
+										for (var i = 0; i < arrs.length; i++) {
+											var obj = arrs[i];
+											var id = obj.Id;
+											var tmp = tree.get_node(id);
+											tmp.data = obj.Sort;
+										}
+										tree.close_node(node);
+										tree.sort(node);
+										tree.open_node(node);
+									};
+									
+									enable(false);
+									tree.set_icon(node,icon);
+									hideMsg();
+									var sort = JSON.stringify(arrs);
+									$.ajax({
+										url: '/Tag/AjaxSort',
+										type: 'POST',
+										dataType: 'json',
+										data: {
+											str:sort,
+										},
+									})
+									.done(function(result) {
+										if(0 == result.Code){
+											updateSort(arrs);
+											
+										}else{
+											showMsg(result.Emsg,MESSAGE_DANGER);
+										}
+									})
+									.fail(function() {
+										showMsg(language["err net"],MESSAGE_DANGER);
+									})
+									.always(function() {
+										tree.set_icon(node);
+										enable(true);
+									});
+
+								});
+							},
+						};
+					}
 					var createItem = {
 						label:language["create"],
 						icon:"/public/img/add_16px.ico",

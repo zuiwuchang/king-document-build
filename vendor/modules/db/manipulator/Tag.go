@@ -35,7 +35,8 @@ func (t *Tag) New(bean *data.Tag) error {
 		if has, err = session.Id(pid).Get(&data.Tag{}); err != nil {
 			return err
 		} else if !has {
-			return fmt.Errorf("tag pid not found (%v)", pid)
+			err = fmt.Errorf("tag pid not found (%v)", pid)
+			return err
 		}
 	}
 
@@ -77,9 +78,11 @@ func (t *Tag) Move(id, pid int64) error {
 		if has, err = session.Id(tmp).Get(&bean); err != nil {
 			return err
 		} else if !has {
-			return fmt.Errorf("tag id not found (%v)", bean.Id)
+			err = fmt.Errorf("tag id not found (%v)", bean.Id)
+			return err
 		} else if bean.Pid == id {
-			return fmt.Errorf("tag id is pid's parent (%v,%v)", id, pid)
+			err = fmt.Errorf("tag id is pid's parent (%v,%v)", id, pid)
+			return err
 		}
 		tmp = bean.Pid
 	}
@@ -87,7 +90,8 @@ func (t *Tag) Move(id, pid int64) error {
 	if n, err = session.Id(id).Cols("pid").Update(data.Tag{Pid: pid}); err != nil {
 		return err
 	} else if n == 0 {
-		return fmt.Errorf("tag id not found (%v)", id)
+		err = fmt.Errorf("tag id not found (%v)", id)
+		return err
 	}
 	return nil
 }
@@ -129,6 +133,28 @@ func (t *Tag) AjaxRemove(id int64) error {
 		}
 		slice = ids
 		n = len(slice)
+	}
+	return nil
+}
+func (t *Tag) Sort(sorts []data.Sort) error {
+	session := NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err == nil {
+			session.Commit()
+		} else {
+			session.Rollback()
+		}
+	}()
+
+	for _, sort := range sorts {
+		if _, err := session.Id(sort.Id).Cols("sort").Update(data.Tag{Sort: sort.Sort}); err != nil {
+			return err
+		}
 	}
 	return nil
 }
