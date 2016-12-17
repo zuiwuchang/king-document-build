@@ -1,133 +1,95 @@
-{{set . "title" (msg . "New")}}
+{{set . "title" (msg . "doc.new.title")}}
 {{template "header.html" .}}
 
 <style type="text/css">
-.kPanelTitleMinus{
-	padding-right: 8px;
-	cursor: pointer;
-}
-.kPanelTitleWrench{
-	padding-right: 8px;
-	cursor: pointer;
-}
-.kPanelTitleEdit{
-	display: none;
-}
-.kPanelBodyHide{
-	display: none;
-	cursor: pointer;
-}
-.kPanelBodyNew{
+#idShowTag{
 	cursor: pointer;
 }
 </style>
 
-<a class="k-target" name="top"></a>
 <div class="container k-view">
 
-<div class="row">
-<div class="col-sm-12">
-	<p>
-	<ul class="list-group" id="idTopNav">
-	</ul>
-	</p>
-</div>
-</div>
+<div class="panel panel-default">
+	<div class="panel-heading">{{msg . "doc.new.title"}}</div>
 
-<div class="row">
-<div class="col-sm-12">
-	<a class="k-target" name="tar0"></a>
-	<div id="idView">
-
-
-<!--
-	<p>
-	<div class="panel panel-default">
-	<div class="panel-heading"><div><span class='glyphicon glyphicon-wrench k-wrench-panel-title'></span><span>Panel Heading</span></div>
-
-	</div>
 	<div class="panel-body">
-
-<ul class="list-group">
-<li class="list-group-item">Item 3</li>
-<li class="list-group-item">Item 4</li>
-<li class="list-group-item">Item 5</li>
-</ul>
-
-	<ul id="sortable1" class="list-group">
-<li class="list-group-item"><h3>go</h3>
-<pre class='prettyprint linenums'>import "fmt"
-func main(){
-	fmt.Println("ok")
-}</pre>123</li>
-<li class="list-group-item"><p>Item 2</p></li>
-<li class="list-group-item">Item 3</li>
-<li class="list-group-item">Item 4</li>
-<li class="list-group-item">Item 5</li>
-</ul>
-
-
-	<h3>go</h3>
-<pre class='prettyprint linenums'>import "fmt"
-func main(){
-	fmt.Println("ok")
-}</pre>
-
-<h3>care</h3>
-123
-	</div>
-	</div>
+	{{if .errMsg}}
+	<div class="alert alert-danger" role="alert">
+	<p>
+		{{.errMsg}}
 	</p>
--->
-
-
-
 	</div>
 
-</div>
-</div>
-</div>
-<a class="k-target" name="bottom"></a>
+	{{end}}
+	<form action="/Edit/NewDoc" method="post">
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<div class="kSpanName">{{msg . "doc.new.name"}}</div>
+				</span>
+				<input type="text" class="form-control" id="idValName" name="name" 
+					{{if .name}}
+						value='{{.name}}'
+					{{else}}
+						value='{{msg . "doc.new.new doc"}}'
+					{{end}}
+				>
+			</div>
+		</div>
 
-<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-<div class="container">
-	<!-- Brand and toggle get grouped for better mobile display -->
-	<div class="navbar-header">
-		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#idNavbarCollapseBottom">
-		<span class="sr-only">Toggle navigation</span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="#top">{{msg . "Edit.NavigationTop"}}</a>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<div class="kSpanName">{{msg . "doc.new.tag"}}</div>
+				</span>
+				<div class="form-control" id="idShowTag"></div>
+				<input style="display: none;" type="text" id="idValTag" value="0" name="tag">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<button id="idBtnSubmit" type="submit" class="btn btn-primary">{{msg . "doc.new.go"}}</button>
+		</div>
+	</form>
+	</div>
+</div>
+
+</div>
+
+
+
+<!--	modal tag	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalTag" id="idBtnTag" style="display: none;">Open Modal</button>
+
+<div id="idModalTag" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">{{msg . "doc.new.set tag"}}</h4>
 	</div>
 
-	<!-- Collect the nav links, forms, and other content for toggling -->
-	<div class="collapse navbar-collapse" id="idNavbarCollapseBottom">
-		<ul class="nav navbar-nav">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{msg . "Edit.Navigation"}}<span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu" id="idMenuNav">
-				
-				</ul>
-			</li>
-			<li><a href="#" id="idBtnNew">{{msg . "Edit.New Panel"}}</a></li>
-			<li><a href="#bottom">{{msg . "Edit.NavigationBottom"}}</a></li>
-		
-		</ul>
-		
-	</div><!-- /.navbar-collapse -->
-</div><!-- /.container -->
-</nav>
+	<div class="modal-body">
+	<p><div id="idModalTagTree"></div></p>
+	</div>
 
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalTagSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalTagCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
 
+</div>
+</div>
 {{template "footer.html" .}}
 
 
-<!--	google code prettify	-->
-<link rel="stylesheet" type="text/css" href="/public/data/opt/code-prettify/src/prettify.css">
-<link rel="stylesheet" type="text/css" href="/public/data/opt/code-prettify/styles/sunburst-line.css">
-<script src="/public/data/opt/code-prettify/src/prettify.js"></script>
+<link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
+<script src="/public/js/jstree/jstree.min.js"></script>
+
+
 
 {{if eq .RunMode "dev"}}
 	<script src="/public/views/Edit/New.js"></script>
@@ -135,31 +97,32 @@ func main(){
 	<script src="/public/views/Edit/New.min.js"></script>
 {{end}}
 
+
 <script type="text/javascript">
 $(document).ready(function() {
-	
-	$("#sortable1").sortable({
-		
-	}).disableSelection();
-
-	//創建 頁面 對象
-	var pCtx = NewContext({
+	NewContext({
 		Language:{
-			"new panel":{{msg . "Edit.New Panel"}},
-			"new section":{{msg . "Edit.New Section"}},
-			"save":{{msg . "Edit.Save"}},
-
-			"panel hide":{{msg . "Edit.Panel Hide ..."}},
 		},
+		InitTag:'{{.tag}}',
+		Data:[
+			{
+				id:'0',
+				parent:'#',
+				text:'{{msg . "tag.TagTree"}}',
+				state:{
+					opened:true,
+				},
+			},
+{{range .tags}}
+			{
+				id:'{{.Id}}',
+				parent:'{{.Pid}}',
+				text:'{{.Name}}',
+				data:{{.Sort}},
+			},
+{{end}}
+		],
 	});
-
-
-	//創建 默認 面板
-	pCtx.NewPanel({{msg . "Edit.New Panel"}});
-	pCtx.NewPanel({{msg . "Edit.New Panel"}});
 	
-	pCtx.BindEvent();
-	
-	prettyPrint();
 });
 </script>

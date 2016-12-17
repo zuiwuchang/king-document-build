@@ -27,3 +27,21 @@ tag.msg erase=你正在刪除標籤
 tag.msg are you sure=此操作不可撤銷，請確認？
 
 tag.modal sort=排序標籤
+
+
+#document
+doc.new.title=新建檔案
+doc.new.name=檔案名稱
+doc.new.tag=所屬標籤
+doc.new.go=創建檔案
+doc.new.new doc=新檔案
+doc.new.set tag=設置所屬標籤
+
+#edit
+edit.title=檔案編輯
+edit.property modify=屬性修改
+edit.status.data=數據狀態
+edit.status.none=未修改
+edit.status.write=已修改
+edit.btn save=保存修改
+

@@ -12,11 +12,20 @@ import (
 )
 
 var g_engine *xorm.Engine
-var g_mediaRoot string
+var g_RootPath string
 
+func GetRootPath() string {
+	return g_RootPath
+}
 func Initialize() {
-
 	//get configure
+	g_RootPath, _ = revel.Config.String("path.root")
+	if g_RootPath == "" {
+		g_RootPath = revel.BasePath + "/document"
+	} else if !strings.HasPrefix(g_RootPath, "/") {
+		g_RootPath = revel.BasePath + "/" + g_RootPath
+	}
+
 	driver, _ := revel.Config.String("db.driver")
 	if driver == "" {
 		panic("db.driver not configure at  app.conf")
@@ -27,7 +36,7 @@ func Initialize() {
 	}
 	if driver == "sqlite3" {
 		if !strings.HasPrefix(source, "/") {
-			source = revel.BasePath + "/private/" + source
+			source = GetRootPath() + source
 		}
 	}
 

@@ -7,16 +7,10 @@
 	<h1>king document</h1>
 	<p>{{msg . "app.What"}}</p>
 	<p>
-		<a class="btn btn-default" href="#1" role="button">{{msg . "app.Search"}}</a>
-		<a class="btn btn-default" href="#1" role="button">{{msg . "app.New"}}</a>
+		<a class="btn btn-default" href="/Document" role="button" target="_blank">{{msg . "app.Search"}}</a>
+		<a class="btn btn-default" href="/Edit/New" role="button" target="_blank">{{msg . "app.New"}}</a>
 		<a class="btn btn-default" href="/Tag/Admin" target="_blank" role="button">{{msg . "app.Tags"}}</a>
 	</p>
 	</div>
 </div>
 {{template "footer.html" .}}
-
-<script type="text/javascript">
-$(document).ready(function() {
-	
-});
-</script>
