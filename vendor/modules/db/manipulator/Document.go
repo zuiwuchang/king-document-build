@@ -88,7 +88,7 @@ func (d *Document) Modify(bean *data.Document) error {
 		if tag.Docs > 0 {
 			tag.Docs--
 		}
-		if _, err = session.Id(tag.Id).Update(&tag); err != nil {
+		if _, err = session.Id(tag.Id).MustCols("docs").Update(&tag); err != nil {
 			return err
 		}
 	}
@@ -103,7 +103,7 @@ func (d *Document) Modify(bean *data.Document) error {
 			return err
 		}
 		tag.Docs++
-		if _, err = session.Id(id).Update(&tag); err != nil {
+		if _, err = session.Id(id).MustCols("docs").Update(&tag); err != nil {
 			return err
 		}
 	}
