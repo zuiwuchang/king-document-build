@@ -52,3 +52,6 @@ func (d *Document) New(bean *data.Document) error {
 func (d *Document) Get(bean *data.Document) (bool, error) {
 	return GetEngine().Get(bean)
 }
+func (d *Document) Modify(bean *data.Document) error {
+	return nil
+}

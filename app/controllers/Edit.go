@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/revel/revel"
+	"modules/ajax"
 	"modules/db/data"
 	"modules/db/manipulator"
 	"strconv"
@@ -35,7 +36,6 @@ func (c Edit) New() revel.Result {
 	return c.Render(tags, errMsg, name, tag)
 }
 func (c Edit) NewDoc(name, tag string) revel.Result {
-
 	doc := data.Document{Name: name}
 	doc.Tag, _ = strconv.ParseInt(tag, 10, 64)
 	var mDocument manipulator.Document
@@ -47,4 +47,15 @@ func (c Edit) NewDoc(name, tag string) revel.Result {
 	c.Session["errValName"] = name
 	c.Session["errValTag"] = tag
 	return c.Redirect(Edit.New)
+}
+func (c Edit) AjaxModifyDoc(id, tag int64, name string) revel.Result {
+	var result ajax.Result
+	doc := data.Document{Id: id, Tag: tag, Name: name}
+	var mDocument manipulator.Document
+	err := mDocument.Modify(&doc)
+	if err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+	}
+	return c.RenderJson(result)
 }

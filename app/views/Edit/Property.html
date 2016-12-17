@@ -19,7 +19,7 @@
 				<div class="kSpanName">{{msg . "doc.new.name"}}</div>
 			</span>
 			<input type="text" class="form-control" id="idPropertValName" value='{{.document.Name}}'>
-			<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+			<span id="idPropertStatusName" class="glyphicon glyphicon-ok form-control-feedback"></span>
 		</div>
 	</div>
 
@@ -30,7 +30,7 @@
 			</span>
 			<div class="form-control" id="idPropertShowTag"></div>
 			<input style="display: none;" type="text" id="idPropertValTag" value="0">
-			<span class="glyphicon glyphicon-ok form-control-feedback"></span>
+			<span id="idPropertStatusTag" class="glyphicon glyphicon-ok form-control-feedback"></span>
 		</div>
 	</div>
 
@@ -39,9 +39,9 @@
 			<span class="input-group-addon">
 				<div class="kSpanName">{{msg . "edit.status.data"}}</div>
 			</span>
-			<div class="form-control">{{msg . "edit.status.none"}}</div>
+			<div class="form-control" id="idPropertWriteStatus">{{msg . "edit.status.none"}}</div>
 			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" id="ididPropertBtnSave">{{msg . "edit.btn save"}}</button>
+				<button class="btn btn-default" type="button" id="idPropertBtnSave">{{msg . "edit.btn save"}}</button>
 			</span>
 		</div>
 	</div>
@@ -97,8 +97,11 @@ $(document).ready(function() {
 			"status.none":{{msg . "edit.status.none"}},
 			"status.write":{{msg . "edit.status.write"}},
 
+			"err net":{{msg . "err net"}},
+
 		},
 		OldVal:{
+			Id:'{{.document.Id}}',
 			Name:'{{.document.Name}}',
 			Tag:'{{.document.Tag}}',
 		},
