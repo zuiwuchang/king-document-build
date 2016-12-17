@@ -1,0 +1,98 @@
+{{set . "title" (msg . "search.title")}}
+{{template "header.html" .}}
+
+
+<div class="container k-view">
+	
+<div class="panel panel-default">
+	<div class="panel-heading">{{msg . "search.doc's tag"}}</div>
+
+	<div class="panel-body">
+		<div id="idTagTree"></div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">{{msg . "search.result"}}</div>
+
+	<div class="panel-body">
+		123
+	</div>
+</div>
+
+</div>
+
+
+
+<!--	modal msg	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalMsg" id="idBtnModalMsg" style="display: none;">Open Modal</button>
+
+<div id="idModalMsg" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title" id="idModalMsgTitle">title</h4>
+	</div>
+
+	<div class="modal-body">
+	<p id="idModalMsgBody">body</p>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalMsgSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalMsgCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
+{{template "footer.html" .}}
+
+
+<link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
+<script src="/public/js/jstree/jstree.min.js"></script>
+
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/App/Search.js"></script>
+{{else}}
+	<script src="/public/views/App/Search.min.js"></script>
+{{end}}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	NewContext({
+		Language:{
+
+		},
+		Data:[
+			{
+				id:'0',
+				parent:'#',
+				text:'{{msg . "tag.TagTree"}}' + "&nbsp;&nbsp;&nbsp;&nbsp;[" + '{{.rows}}' + "]",
+				state:{
+					opened:true,
+				},
+				data:{
+					Sort:0,
+					Docs:{{.rows}},
+				},
+			},
+{{range .tags}}
+			{
+				id:'{{.Id}}',
+				parent:'{{.Pid}}',
+				text:'{{.Name}}' + "&nbsp;&nbsp;&nbsp;&nbsp;[" + '{{.Docs}}' + "]",
+				data:{
+					Sort:{{.Sort}},
+					Docs:{{.Docs}},
+				},
+			},
+{{end}}
+		],
+	});
+});
+</script>

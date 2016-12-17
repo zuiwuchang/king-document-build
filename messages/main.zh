@@ -45,3 +45,7 @@ edit.status.none=未修改
 edit.status.write=已修改
 edit.btn save=保存修改
 
+#search
+search.title=查找檔案
+search.doc's tag=選擇檔案標籤
+search.result=檔案數據

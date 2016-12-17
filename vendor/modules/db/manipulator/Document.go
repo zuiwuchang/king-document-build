@@ -112,3 +112,7 @@ func (d *Document) Modify(bean *data.Document) error {
 	_, err = session.Id(bean.Id).MustCols("name", "tag").Update(bean)
 	return err
 }
+
+func (d *Document) Count(tag int64) (int64, error) {
+	return GetEngine().Where("tag = ?", tag).Count(data.Document{})
+}
