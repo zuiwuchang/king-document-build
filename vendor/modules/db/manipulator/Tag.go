@@ -87,7 +87,7 @@ func (t *Tag) Move(id, pid int64) error {
 		tmp = bean.Pid
 	}
 	var n int64
-	if n, err = session.Id(id).Cols("pid").Update(data.Tag{Pid: pid}); err != nil {
+	if n, err = session.Id(id).MustCols("pid").Update(data.Tag{Pid: pid}); err != nil {
 		return err
 	} else if n == 0 {
 		err = fmt.Errorf("tag id not found (%v)", id)
@@ -152,7 +152,7 @@ func (t *Tag) Sort(sorts []data.Sort) error {
 	}()
 
 	for _, sort := range sorts {
-		if _, err := session.Id(sort.Id).Cols("sort").Update(data.Tag{Sort: sort.Sort}); err != nil {
+		if _, err := session.Id(sort.Id).MustCols("sort").Update(data.Tag{Sort: sort.Sort}); err != nil {
 			return err
 		}
 	}
