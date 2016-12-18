@@ -15,8 +15,8 @@
 <div class="panel panel-default">
 	<div class="panel-heading">{{msg . "search.result"}}</div>
 
-	<div class="panel-body">
-		123
+	<div class="panel-body" id="idDocsView">
+		{{msg . "search.none data"}}
 	</div>
 </div>
 
@@ -66,7 +66,11 @@
 $(document).ready(function() {
 	NewContext({
 		Language:{
+			"toggle tag":{{msg . "search.toggle tag"}},
+			"search tag":{{msg . "search.search tag"}},
 
+			"error title":{{msg . "search.error title"}},
+			"err net":{{msg . "err net"}},
 		},
 		Data:[
 			{

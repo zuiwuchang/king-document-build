@@ -1,6 +1,18 @@
 var NewContext = function(initObj){
 	var language = initObj.Language;
 	
+	var _enable = true;
+	var isEnable = function(){
+		return _enable;
+	};
+	var enable = function(ok){
+		if(ok){
+			_enable = true;
+		}else{
+			_enable = false;
+		}
+	};
+
 	//消息 對話框
 	var newModalMsg = function(){
 		var jqBtnShow = $("#idBtnModalMsg");
@@ -39,18 +51,7 @@ var NewContext = function(initObj){
 
 	//tree
 	var newTree = function(){
-		var _enable = true;
-		var isEnable = function(){
-			return _enable;
-		};
-		var enable = function(ok){
-			if(ok){
-				_enable = true;
-			}else{
-				_enable = false;
-			}
-		};
-
+		var onSearch = null;
 		
 
 		var jq = $("#idTagTree");
@@ -59,12 +60,42 @@ var NewContext = function(initObj){
 		jq.hide().jstree({
 			plugins : [
 				"conditionalselect",
-				//"contextmenu",
+				"contextmenu",
 				"sort",
 			],
 			conditionalselect:function(){
 				this.deselect_all(true);
 				return true;
+			},
+			contextmenu:{
+				items:function(node){
+					var tree = this;
+					//search
+					var itemsObj = {
+						search:{
+							label:language["search tag"],
+							icon:"/public/img/book_16px.ico",
+							action:function(){
+								if(onSearch){
+									onSearch(tree,node);
+								}
+							},	
+						},
+					};
+					//toggle
+					if(!tree.is_leaf(node)){
+						itemsObj.toggle = {
+							label:language["toggle tag"],
+							icon:"/public/img/attachment_16px.ico",
+							separator_before: true,
+							action:function(){
+								tree.toggle_node(node);
+							},	
+						};
+					}
+
+					return itemsObj;
+				},
 			},
 			sort:function(l, r){
 				var nodeL = this.get_node(l);
@@ -78,6 +109,42 @@ var NewContext = function(initObj){
 		}).on("ready.jstree",function(){
 			$(this).show();
 		});
+		return {
+			Bind:function(name,callback){
+				if(name == "search"){
+					onSearch = callback;
+				}
+			},
+		};
 	};
-	newTree();
+	var mytree = newTree();
+
+	var newDocsView = function(){
+		var jqView = $("#idDocsView");
+		return {};
+	};
+	var docsView = newDocsView();
+
+	mytree.Bind("search",function(tree,node){
+		if(!isEnable()){
+			return;
+		}
+		enable(false);
+		$.ajax({
+			url: '/Tag/AjaxGetDocs',
+			type: 'POST',
+			dataType: 'json',
+			data: {tag:node.id},
+		})
+		.done(function() {
+			console.log("success");
+		})
+		.fail(function() {
+			modal.Show(language["error title"],language["err net"])
+		})
+		.always(function() {
+			enable(true);
+		});
+		
+	});
 };

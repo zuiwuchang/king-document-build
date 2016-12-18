@@ -49,3 +49,7 @@ edit.btn save=保存修改
 search.title=查找檔案
 search.doc's tag=選擇檔案標籤
 search.result=檔案數據
+search.toggle tag=切換標籤
+search.search tag=查找檔案
+search.none data=沒有檔案
+search.error title=錯誤
