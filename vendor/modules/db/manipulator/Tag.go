@@ -183,9 +183,11 @@ func (t *Tag) FindPath(id int64, beans *[]data.Tag) error {
 			return fmt.Errorf("tag id not found (%v)", id)
 		}
 		*beans = append(*beans, bean)
-
 		id = bean.Pid
 	}
 
+	for i, j := 0, len(*beans)-1; i < j; i, j = i+1, j-1 {
+		(*beans)[i], (*beans)[j] = (*beans)[j], (*beans)[i]
+	}
 	return nil
 }
