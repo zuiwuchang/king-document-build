@@ -39,6 +39,9 @@ doc.new.go=創建檔案
 doc.new.new doc=新檔案
 doc.new.set tag=設置所屬標籤
 
+#
+doc.title=檔案
+
 #edit
 edit.title=檔案編輯
 edit.btn save=保存修改

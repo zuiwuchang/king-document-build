@@ -13,6 +13,26 @@ type Document struct {
 	*revel.Controller
 }
 
+func (c Document) Index(id int64) revel.Result {
+	if id == 0 {
+		return c.RenderError(fmt.Errorf("document id not found (%v)", id))
+	}
+	document := data.Document{Id: id}
+	var mDocument manipulator.Document
+	if has, err := mDocument.Get(&document); err != nil {
+		return c.RenderError(err)
+	} else if !has {
+		return c.RenderError(fmt.Errorf("document id not found (%v)", id))
+	}
+
+	var mChapter manipulator.Chapter
+	var chapters []data.Chapter
+	if err := mChapter.FindByDoc(id, &chapters); err != nil {
+		return c.RenderError(err)
+	}
+
+	return c.Render(document, chapters)
+}
 func (c Document) New() revel.Result {
 	var name, tag string
 	errMsg, ok := c.Session["errNew"]
