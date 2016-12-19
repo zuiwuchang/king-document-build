@@ -1,0 +1,95 @@
+
+
+
+<div class="panel panel-default" id="idViewProperty">
+	<div class="panel-heading"><span class="glyphicon glyphicon-minus kBtnIcon" id="idChapterHide"></span>{{msg . "edit.chapter modify"}}</div>
+
+	<div class="panel-body">
+
+	<div id="idChapterBodyHide" style="display: none;">
+		{{msg . "data is hide"}}
+	</div>
+	<div id="idChapterBodyView">
+		<div id="idChapterMsg"></div>
+
+		<div id="idChapterTree"></div>
+	</div>
+
+	</div>
+</div>
+
+
+<!--	modal sort	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalSort" id="idBtnSort" style="display: none;">Open Modal</button>
+
+<div id="idModalSort" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">{{msg . "edit.chapter.modal sort"}}</h4>
+	</div>
+
+	<div class="modal-body">
+		<ul class='list-group' id="idModalSortBody">
+		</ul>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalSortSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalSortCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
+
+
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/Edit/Chapter.js"></script>
+{{else}}
+	<script src="/public/views/Edit/Chapter.min.js"></script>
+{{end}}
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	NewChapter({
+		Language:{
+			"err net":{{msg . "err net"}},
+
+			"menu new":{{msg . "edit.chapter.menu.new"}},
+			"menu sort":{{msg . "edit.chapter.menu.sort"}},
+			"menu rename":{{msg . "edit.chapter.menu.rename"}},
+			"menu remove":{{msg . "edit.chapter.menu remove"}},
+			"menu view":{{msg . "edit.chapter.menu view"}},
+			"menu edit":{{msg . "edit.chapter.menu edit"}},
+
+			
+			"new name":{{msg . "edit.chapter.new name"}},
+		},
+		Id:{{.id}},
+		Data:[
+			{
+				id:'0',
+				parent:'#',
+				text:'{{msg . "edit.chapter.list"}}',
+				state:{
+					opened:true,
+				},
+			},
+{{range .chapters}}
+			{
+				id:'{{.Id}}',
+				parent:'0',
+				text:'{{.Name}}',
+				data:{{.Sort}},
+			},
+{{end}}
+		],
+	});
+});
+</script>

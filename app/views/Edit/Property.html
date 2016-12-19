@@ -7,42 +7,47 @@
 
 
 <div class="panel panel-default" id="idViewProperty">
-	<div class="panel-heading">{{msg . "edit.property modify"}}</div>
+	<div class="panel-heading"><span class="glyphicon glyphicon-minus kBtnIcon" id="idPropertyHide"></span>{{msg . "edit.property modify"}}</div>
 
 	<div class="panel-body">
-	
-	<div id="idPropertyMsg"></div>
 
-	<div class="form-group">
-		<div class="input-group">
-			<span class="input-group-addon">
-				<div class="kSpanName">{{msg . "doc.new.name"}}</div>
-			</span>
-			<input type="text" class="form-control" id="idPropertValName" value='{{.document.Name}}'>
-			<span id="idPropertStatusName" class="glyphicon glyphicon-ok form-control-feedback"></span>
-		</div>
+	<div id="idPropertyBodyHide" style="display: none;">
+		{{msg . "data is hide"}}
 	</div>
+	<div id="idPropertyBodyView">
+		<div id="idPropertyMsg"></div>
 
-	<div class="form-group">
-		<div class="input-group">
-			<span class="input-group-addon">
-				<div class="kSpanName">{{msg . "doc.new.tag"}}</div>
-			</span>
-			<div class="form-control" id="idPropertShowTag"></div>
-			<input style="display: none;" type="text" id="idPropertValTag" value="0">
-			<span id="idPropertStatusTag" class="glyphicon glyphicon-ok form-control-feedback"></span>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<div class="kSpanName">{{msg . "doc.new.name"}}</div>
+				</span>
+				<input type="text" class="form-control" id="idPropertValName" value='{{.document.Name}}'>
+				<span id="idPropertStatusName" class="glyphicon glyphicon-ok form-control-feedback"></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="form-group">
-		<div class="input-group">
-			<span class="input-group-addon">
-				<div class="kSpanName">{{msg . "edit.status.data"}}</div>
-			</span>
-			<div class="form-control" id="idPropertWriteStatus">{{msg . "edit.status.none"}}</div>
-			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" id="idPropertBtnSave">{{msg . "edit.btn save"}}</button>
-			</span>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<div class="kSpanName">{{msg . "doc.new.tag"}}</div>
+				</span>
+				<div class="form-control" id="idPropertShowTag"></div>
+				<input style="display: none;" type="text" id="idPropertValTag" value="0">
+				<span id="idPropertStatusTag" class="glyphicon glyphicon-ok form-control-feedback"></span>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<div class="kSpanName">{{msg . "edit.status.data"}}</div>
+				</span>
+				<div class="form-control" id="idPropertWriteStatus">{{msg . "edit.status.none"}}</div>
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="idPropertBtnSave">{{msg . "edit.btn save"}}</button>
+				</span>
+			</div>
 		</div>
 	</div>
 
@@ -78,8 +83,6 @@
 </div>
 
 
-<link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
-<script src="/public/js/jstree/jstree.min.js"></script>
 
 
 

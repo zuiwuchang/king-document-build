@@ -235,6 +235,12 @@ var NewProperty = function(initObj){
 		});
 		
 	});
-	return {
-	};
+	
+
+	var jqBodyView = $("#idPropertyBodyView");
+	var jqBodyHide = $("#idPropertyBodyHide");
+	$("#idPropertyHide").click(function(event) {
+		jqBodyHide.toggle("fast");
+		jqBodyView.toggle("fast");
+	});
 };

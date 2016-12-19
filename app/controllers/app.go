@@ -26,13 +26,19 @@ func (c App) Edit(id int64) revel.Result {
 		return c.RenderError(fmt.Errorf("document id not found (%v)", id))
 	}
 
+	var mChapter manipulator.Chapter
+	var chapters []data.Chapter
+	if err := mChapter.FindByDoc(id, &chapters); err != nil {
+		return c.RenderError(err)
+	}
+
 	var tags []data.Tag
 	var mTag manipulator.Tag
 	err := mTag.Find(&tags)
 	if err != nil {
 		return c.RenderError(err)
 	}
-	return c.Render(document, tags)
+	return c.Render(document, tags, chapters, id)
 }
 func (c App) Search() revel.Result {
 	var tags []data.Tag

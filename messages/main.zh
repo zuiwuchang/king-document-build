@@ -2,6 +2,8 @@
 Sure=確定
 Cancel=取消
 
+data is hide=數據已隱藏 ...
+
 #
 app.What=這是孤爲了整理所學開發的一個文檔編輯工具
 app.Search=查找檔案
@@ -39,11 +41,27 @@ doc.new.set tag=設置所屬標籤
 
 #edit
 edit.title=檔案編輯
-edit.property modify=屬性修改
+edit.btn save=保存修改
 edit.status.data=數據狀態
 edit.status.none=未修改
 edit.status.write=已修改
-edit.btn save=保存修改
+
+edit.property modify=屬性修改
+
+edit.chapter modify=章節修改
+
+edit.chapter.list=章節列表
+edit.chapter.menu.new=新建章節
+edit.chapter.menu.sort=章節排序
+edit.chapter.menu.rename=章節改名
+edit.chapter.menu remove=刪除章節
+edit.chapter.new name=新章節
+edit.chapter.menu view=查看章節
+edit.chapter.menu edit=編輯章節
+
+edit.chapter.modal sort=排序章節
+
+
 
 #search
 search.title=查找檔案

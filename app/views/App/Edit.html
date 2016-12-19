@@ -1,10 +1,20 @@
 {{set . "title" (msg . "edit.title")}}
 {{template "header.html" .}}
 
+<link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
+<script src="/public/js/jstree/jstree.min.js"></script>
+
+<style type="text/css">
+.kBtnIcon{
+	padding-right: 5px;
+	cursor: pointer;
+}	
+</style>
+
 
 <div class="container k-view">
 	{{template "Edit/Property.html" .}}
-	
+	{{template "Edit/Chapter.html" .}}
 
 </div>
 {{template "footer.html" .}}
