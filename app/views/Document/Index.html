@@ -3,6 +3,31 @@
 
 <div class="container k-view">
 	
+<div class="panel panel-default">
+	<div class="panel-heading">
+		{{.document.Name}}
+	</div>
+	<div class="panel-body">
+{{if .tags}}
+	<ol class="breadcrumb">
+	{{range .tags}}
+		<li>{{.Name}}</li>
+	{{end}}
+	</ol>
+{{end}}
+
+	<p>
+{{if .chapters}}
+	{{range .chapters}}
+	<p><a href="/Chapter?id={{.Id}}" target="_blank">{{.Name}}</a></p>
+	{{end}}
+{{else}}
+	{{msg . "data is none"}}
+{{end}}
+	</p>
+
+	</div>
+</div>
 
 </div>
 {{template "footer.html" .}}

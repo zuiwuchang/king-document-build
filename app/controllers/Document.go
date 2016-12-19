@@ -31,7 +31,15 @@ func (c Document) Index(id int64) revel.Result {
 		return c.RenderError(err)
 	}
 
-	return c.Render(document, chapters)
+	var tags []data.Tag
+	var mTag manipulator.Tag
+	if document.Tag != 0 {
+		if err := mTag.FindPath(document.Tag, &tags); err != nil {
+			return c.RenderError(err)
+		}
+	}
+
+	return c.Render(document, chapters, tags)
 }
 func (c Document) New() revel.Result {
 	var name, tag string

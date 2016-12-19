@@ -158,3 +158,34 @@ func (t *Tag) Sort(sorts []data.Sort) error {
 	}
 	return nil
 }
+func (t *Tag) FindPath(id int64, beans *[]data.Tag) error {
+	sesion := NewSession()
+	defer sesion.Close()
+	err := sesion.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err == nil {
+			sesion.Commit()
+		} else {
+			sesion.Rollback()
+		}
+	}()
+
+	*beans = make([]data.Tag, 0, 20)
+	var has bool
+	for id != 0 {
+		var bean data.Tag
+		if has, err = sesion.Id(id).Get(&bean); err != nil {
+			return err
+		} else if !has {
+			return fmt.Errorf("tag id not found (%v)", id)
+		}
+		*beans = append(*beans, bean)
+
+		id = bean.Pid
+	}
+
+	return nil
+}
