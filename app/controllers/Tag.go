@@ -59,7 +59,7 @@ func (c Tag) AjaxMove(id, pid int64) revel.Result {
 func (c Tag) AjaxRemove(id int64) revel.Result {
 	var result ajax.Result
 	var mTag manipulator.Tag
-	err := mTag.AjaxRemove(id)
+	err := mTag.Remove(id)
 	if err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
@@ -83,5 +83,15 @@ func (c Tag) AjaxSort(str string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
+	return c.RenderJson(result)
+}
+func (c Tag) AjaxGetDocs(tag int64) revel.Result {
+	var result ajax.ResultDocs
+	var mDoc manipulator.Document
+	if err := mDoc.FindByTag(tag, &result.Data); err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+	}
+
 	return c.RenderJson(result)
 }

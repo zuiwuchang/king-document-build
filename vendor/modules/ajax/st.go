@@ -1,5 +1,9 @@
 package ajax
 
+import (
+	"modules/db/data"
+)
+
 const (
 	//執行成功
 	CODE_SUCCESS = 0
@@ -16,4 +20,9 @@ type Result struct {
 	Emsg  string //錯誤描述
 	Value int64  //int64 返回值
 	Str   string //string 返回值
+}
+
+type ResultDocs struct {
+	Result
+	Data []data.Document
 }

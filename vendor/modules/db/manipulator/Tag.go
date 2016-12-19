@@ -95,7 +95,7 @@ func (t *Tag) Move(id, pid int64) error {
 	}
 	return nil
 }
-func (t *Tag) AjaxRemove(id int64) error {
+func (t *Tag) Remove(id int64) error {
 	if id == 0 {
 		return fmt.Errorf("tag id not found (%v)", id)
 	}

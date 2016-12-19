@@ -1,5 +1,6 @@
 var NewContext = function(initObj){
 	var language = initObj.Language;
+	var ICON_WAIT = "/public/img/throbber.gif"
 	
 	var _enable = true;
 	var isEnable = function(){
@@ -121,7 +122,27 @@ var NewContext = function(initObj){
 
 	var newDocsView = function(){
 		var jqView = $("#idDocsView");
-		return {};
+		return {
+			Update:function(arrs){
+				if(!arrs){
+					jqView.html(language["none data"]);
+					return;
+				}
+				var items = [];
+				for (var i = 0; i < arrs.length; i++) {
+					var data= arrs[i];
+					items.push("<p><span class='glyphicon glyphicon-wrench kBtnEdit' data-id='" +
+						data.Id + "'></span><a target='_blank' href='/Document?id=" +
+						data.Id + "'>" + data.Name  +"</a></p>");
+				}
+				var jq = $(items.join(""));
+				jq.find('.kBtnEdit').click(function(event) {
+					var href = "/Edit?id=" + $(this).data('id');
+					window.open(href);
+				});
+				jqView.html(jq);
+			},
+		};
 	};
 	var docsView = newDocsView();
 
@@ -130,20 +151,26 @@ var NewContext = function(initObj){
 			return;
 		}
 		enable(false);
+		tree.set_icon(node,ICON_WAIT);
 		$.ajax({
 			url: '/Tag/AjaxGetDocs',
 			type: 'POST',
 			dataType: 'json',
 			data: {tag:node.id},
 		})
-		.done(function() {
-			console.log("success");
+		.done(function(result) {
+			if(result.Code == 0){
+				docsView.Update(result.Data);
+			}else{
+				modal.Show(language["error title"],result.Emsg)
+			}
 		})
 		.fail(function() {
 			modal.Show(language["error title"],language["err net"])
 		})
 		.always(function() {
 			enable(true);
+			tree.set_icon(node);
 		});
 		
 	});

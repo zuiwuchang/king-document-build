@@ -1,6 +1,12 @@
 {{set . "title" (msg . "search.title")}}
 {{template "header.html" .}}
 
+<style type="text/css">
+.kBtnEdit{
+	padding:5px;
+	cursor: pointer;
+}	
+</style>
 
 <div class="container k-view">
 	
@@ -71,6 +77,8 @@ $(document).ready(function() {
 
 			"error title":{{msg . "search.error title"}},
 			"err net":{{msg . "err net"}},
+
+			"none data":{{msg . "search.none data"}},
 		},
 		Data:[
 			{

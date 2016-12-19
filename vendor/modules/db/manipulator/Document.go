@@ -88,7 +88,7 @@ func (d *Document) Modify(bean *data.Document) error {
 		if tag.Docs > 0 {
 			tag.Docs--
 		}
-		if _, err = session.Id(tag.Id).MustCols("docs").Update(&tag); err != nil {
+		if _, err = session.Id(id).MustCols("docs").Update(&tag); err != nil {
 			return err
 		}
 	}
@@ -115,4 +115,8 @@ func (d *Document) Modify(bean *data.Document) error {
 
 func (d *Document) Count(tag int64) (int64, error) {
 	return GetEngine().Where("tag = ?", tag).Count(data.Document{})
+}
+
+func (d *Document) FindByTag(tag int64, beans *[]data.Document) error {
+	return GetEngine().Where("tag = ?", tag).Find(beans)
 }

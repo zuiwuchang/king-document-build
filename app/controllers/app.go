@@ -51,6 +51,6 @@ func (c App) Search() revel.Result {
 	return c.Render(tags, rows)
 }
 
-func (c App) Document() revel.Result {
+func (c App) Document(id int64) revel.Result {
 	return c.Render()
 }
