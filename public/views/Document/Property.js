@@ -213,7 +213,7 @@ var NewProperty = function(initObj){
 		var tag = jqValTag.val();
 
 		$.ajax({
-			url: '/Edit/AjaxModifyDoc',
+			url: '/Document/AjaxModify',
 			type: 'POST',
 			dataType: 'json',
 			data: {id:oldVal.Id,name:name,tag:tag},

@@ -1,29 +1,39 @@
+{{set . "title" (msg . "doc.new.title")}}
+{{template "header.html" .}}
 
 <style type="text/css">
-#idPropertShowTag{
+#idShowTag{
 	cursor: pointer;
 }
 </style>
 
+<div class="container k-view">
 
-<div class="panel panel-default" id="idViewProperty">
-	<div class="panel-heading"><span class="glyphicon glyphicon-minus kBtnIcon" id="idPropertyHide"></span>{{msg . "edit.property modify"}}</div>
+<div class="panel panel-default">
+	<div class="panel-heading">{{msg . "doc.new.title"}}</div>
 
 	<div class="panel-body">
-
-	<div id="idPropertyBodyHide" style="display: none;">
-		{{msg . "data is hide"}}
+	{{if .errMsg}}
+	<div class="alert alert-danger" role="alert">
+	<p>
+		{{.errMsg}}
+	</p>
 	</div>
-	<div id="idPropertyBodyView">
-		<div id="idPropertyMsg"></div>
 
+	{{end}}
+	<form action="/Document/NewDoc" method="post">
 		<div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon">
 					<div class="kSpanName">{{msg . "doc.new.name"}}</div>
 				</span>
-				<input type="text" class="form-control" id="idPropertValName" value='{{.document.Name}}'>
-				<span id="idPropertStatusName" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<input type="text" class="form-control" id="idValName" name="name" 
+					{{if .name}}
+						value='{{.name}}'
+					{{else}}
+						value='{{msg . "doc.new.new doc"}}'
+					{{end}}
+				>
 			</div>
 		</div>
 
@@ -32,26 +42,18 @@
 				<span class="input-group-addon">
 					<div class="kSpanName">{{msg . "doc.new.tag"}}</div>
 				</span>
-				<div class="form-control" id="idPropertShowTag"></div>
-				<input style="display: none;" type="text" id="idPropertValTag" value="0">
-				<span id="idPropertStatusTag" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<div class="form-control" id="idShowTag"></div>
+				<input style="display: none;" type="text" id="idValTag" value="0" name="tag">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<div class="input-group">
-				<span class="input-group-addon">
-					<div class="kSpanName">{{msg . "edit.status.data"}}</div>
-				</span>
-				<div class="form-control" id="idPropertWriteStatus">{{msg . "edit.status.none"}}</div>
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button" id="idPropertBtnSave">{{msg . "edit.btn save"}}</button>
-				</span>
-			</div>
+			<button id="idBtnSubmit" type="submit" class="btn btn-primary">{{msg . "doc.new.go"}}</button>
 		</div>
+	</form>
 	</div>
+</div>
 
-	</div>
 </div>
 
 
@@ -81,34 +83,27 @@
 
 </div>
 </div>
+{{template "footer.html" .}}
 
 
+<link rel="stylesheet" href="/public/js/jstree/themes/default/style.min.css" />
+<script src="/public/js/jstree/jstree.min.js"></script>
 
 
 
 {{if eq .RunMode "dev"}}
-	<script src="/public/views/Edit/Property.js"></script>
+	<script src="/public/views/Document/New.js"></script>
 {{else}}
-	<script src="/public/views/Edit/Property.min.js"></script>
+	<script src="/public/views/Document/New.min.js"></script>
 {{end}}
 
 
 <script type="text/javascript">
 $(document).ready(function() {
-	NewProperty({
+	NewContext({
 		Language:{
-			"status.none":{{msg . "edit.status.none"}},
-			"status.write":{{msg . "edit.status.write"}},
-
-			"err net":{{msg . "err net"}},
-
 		},
-		OldVal:{
-			Id:'{{.document.Id}}',
-			Name:'{{.document.Name}}',
-			Tag:'{{.document.Tag}}',
-		},
-		InitTag:'{{.document.Tag}}',
+		InitTag:'{{.tag}}',
 		Data:[
 			{
 				id:'0',
@@ -128,5 +123,6 @@ $(document).ready(function() {
 {{end}}
 		],
 	});
+	
 });
 </script>

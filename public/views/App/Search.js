@@ -132,12 +132,12 @@ var NewContext = function(initObj){
 				for (var i = 0; i < arrs.length; i++) {
 					var data= arrs[i];
 					items.push("<p><span class='glyphicon glyphicon-wrench kBtnEdit' data-id='" +
-						data.Id + "'></span><a target='_blank' href='/Document?id=" +
+						data.Id + "'></span><a target='_blank' href='/Document/Index?id=" +
 						data.Id + "'>" + data.Name  +"</a></p>");
 				}
 				var jq = $(items.join(""));
 				jq.find('.kBtnEdit').click(function(event) {
-					var href = "/Edit?id=" + $(this).data('id');
+					var href = "/Document/Edit?id=" + $(this).data('id');
 					window.open(href);
 				});
 				jqView.html(jq);

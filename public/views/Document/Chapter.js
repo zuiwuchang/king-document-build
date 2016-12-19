@@ -119,7 +119,7 @@ var NewChapter = function(initObj){
 			enable(false);
 			var name = language["new name"];
 			$.ajax({
-				url: '/Edit/AjaxNewChapter',
+				url: '/Chapter/AjaxNew',
 				type: 'POST',
 				dataType: 'json',
 				data: {doc: initObj.Id,name:name},
