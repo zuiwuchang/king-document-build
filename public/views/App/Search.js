@@ -120,8 +120,8 @@ var NewContext = function(initObj){
 	};
 	var mytree = newTree();
 
+	var jqView = $("#idDocsView");
 	var newDocsView = function(){
-		var jqView = $("#idDocsView");
 		return {
 			Update:function(arrs){
 				if(!arrs){
@@ -173,5 +173,10 @@ var NewContext = function(initObj){
 			tree.set_icon(node);
 		});
 		
+	});
+	var jqViewHide = $("#idDocsHide");
+	$("#kBtnIcon").click(function(event) {
+		jqView.toggle("fast");
+		jqViewHide.toggle("fast");
 	});
 };

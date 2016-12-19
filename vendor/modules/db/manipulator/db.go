@@ -73,6 +73,7 @@ func Initialize() {
 	//init db
 	initTable(data.Tag{})
 	initTable(data.Document{})
+	initTable(data.Chapter{})
 	initTable(data.Panel{})
 	initTable(data.Section{})
 

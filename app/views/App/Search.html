@@ -3,9 +3,13 @@
 
 <style type="text/css">
 .kBtnEdit{
-	padding:5px;
+	padding-right: 5px;
 	cursor: pointer;
-}	
+}
+#kBtnIcon{
+	padding-right: 5px;
+	cursor: pointer;
+}
 </style>
 
 <div class="container k-view">
@@ -19,10 +23,15 @@
 </div>
 
 <div class="panel panel-default">
-	<div class="panel-heading">{{msg . "search.result"}}</div>
+	<div class="panel-heading"><span class="glyphicon glyphicon-minus" id="kBtnIcon"></span>{{msg . "search.result"}}</div>
 
-	<div class="panel-body" id="idDocsView">
+	<div class="panel-body">
+		<div id="idDocsHide" style="display: none;">
+		{{msg . "search.data hide"}}
+		</div>
+		<div id="idDocsView">
 		{{msg . "search.none data"}}
+		</div>
 	</div>
 </div>
 

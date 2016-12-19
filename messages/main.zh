@@ -53,3 +53,4 @@ search.toggle tag=切換標籤
 search.search tag=查找檔案
 search.none data=沒有檔案
 search.error title=錯誤
+search.data hide=數據已隱藏 ...
