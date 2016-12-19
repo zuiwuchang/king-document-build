@@ -203,7 +203,10 @@ var NewChapter = function(initObj){
 
 			});
 		};
-		var action
+		var actionEdit = function(tree,node){
+			var url = "/Edit?id=" + node.id;
+			window.open(url);
+		};
 		jqTree.jstree({
 			plugins : [
 				"conditionalselect",
@@ -247,6 +250,7 @@ var NewChapter = function(initObj){
 							label:language["menu edit"],
 							icon:"/public/img/wrench_16px.ico",
 							action:function(){
+								actionEdit(tree,node);
 							},
 						},
 						rename:{

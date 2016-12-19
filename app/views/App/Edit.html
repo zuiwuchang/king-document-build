@@ -1,0 +1,88 @@
+{{set . "title" (msg . "chapter.edit.title")}}
+{{template "header.html" .}}
+
+<style type="text/css">
+.kBtnSpan{
+	padding-right: 5px;
+	cursor: pointer;
+}	
+</style>
+
+<div class="container k-view">
+
+<div class="panel panel-default">
+	<div class="panel-heading"><span class="glyphicon glyphicon-minus kBtnSpan" id="idBtnToggle"></span>{{.document.Name}} - {{.chapter.Name}}</div>
+	<div class="panel-body">
+		<div id="idBodyHide" style="display: none;">{{msg .  "data is hide"}}</div>
+		<div id="idBodyView">
+			<ul id="idListPanel" class="list-group">
+			</ul>
+
+			<div>
+				<span class="glyphicon glyphicon-plus kBtnSpan" id="idBtnNewPanel"></span>
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+
+<!--	modal msg	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalMsg" id="idBtnModalMsg" style="display: none;">Open Modal</button>
+
+<div id="idModalMsg" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title" id="idModalMsgTitle">title</h4>
+	</div>
+
+	<div class="modal-body">
+	<p id="idModalMsgBody">body</p>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalMsgSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalMsgCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
+{{template "footer.html" .}}
+
+
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/App/Edit.js"></script>
+{{else}}
+	<script src="/public/views/App/Edit.min.js"></script>
+{{end}}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var ctx = NewContext({
+		Language:{
+			"err.title":{{msg . "err.title"}},
+			"err net":{{msg . "err net"}},
+
+			"new panel":{{msg . "chapter.edit.new panel"}},
+		},
+		Panels:[
+{{range .panels}}
+			{
+				Id:{{.Id}},
+				Name:{{.Name}},
+			},
+{{end}}
+		],
+		Chapter:{
+			Id:{{.chapter.Id}},
+		},
+	});
+});
+</script>

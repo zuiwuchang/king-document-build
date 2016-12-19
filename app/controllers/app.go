@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/revel/revel"
 	"modules/db/data"
 	"modules/db/manipulator"
@@ -31,6 +33,34 @@ func (c App) Search() revel.Result {
 	return c.Render(tags, rows)
 }
 
+func (c App) Edit(id int64) revel.Result {
+	if id == 0 {
+		return c.RenderError(errors.New("chapter id not found (0)"))
+	}
+	chapter := data.Chapter{Id: id}
+	var mChapter manipulator.Chapter
+	if has, err := mChapter.Get(&chapter); err != nil {
+		return c.RenderError(err)
+	} else if !has {
+		return c.RenderError(fmt.Errorf("chapter id not found (%v)", id))
+	}
+
+	document := data.Document{Id: chapter.Doc}
+	var mDoc manipulator.Document
+	if has, err := mDoc.Get(&document); err != nil {
+		return c.RenderError(err)
+	} else if !has {
+		return c.RenderError(fmt.Errorf("document id not found (%v)", chapter.Doc))
+	}
+
+	var panels []data.Panel
+	var mPanel manipulator.Panel
+	if err := mPanel.Find(id, &panels); err != nil {
+		return c.RenderError(err)
+	}
+
+	return c.Render(document, chapter, panels)
+}
 func (c App) Document(id int64) revel.Result {
 	return c.Render()
 }
