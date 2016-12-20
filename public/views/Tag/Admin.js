@@ -1,4 +1,5 @@
 var NewContext = function(initObj){
+	"use strict";
 	var language = initObj.Language;
 	var TREE_ROOT_ID = '0';
 	//msg

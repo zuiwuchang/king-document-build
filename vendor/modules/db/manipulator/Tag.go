@@ -41,7 +41,7 @@ func (t *Tag) New(bean *data.Tag) error {
 	}
 
 	_, err = session.InsertOne(bean)
-	return nil
+	return err
 }
 func (t *Tag) Rename(bean *data.Tag) error {
 	engine := GetEngine()

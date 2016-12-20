@@ -26,3 +26,7 @@ type ResultDocs struct {
 	Result
 	Data []data.Document
 }
+type ResultSections struct {
+	Result
+	Data []data.Section
+}

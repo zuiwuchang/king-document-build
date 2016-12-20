@@ -1,2 +1,3 @@
 err net=網路異常
 err.title=錯誤
+warning.title=警告

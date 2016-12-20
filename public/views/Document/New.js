@@ -1,4 +1,5 @@
 var NewContext = function(initObj){
+	"use strict";
 	var language = initObj.Language;
 	(function() {
 		var jq = $(".kSpanName");

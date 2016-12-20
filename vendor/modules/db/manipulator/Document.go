@@ -3,7 +3,6 @@ package manipulator
 import (
 	"fmt"
 	"modules/db/data"
-	"os"
 )
 
 type Document struct {
@@ -32,10 +31,6 @@ func (d *Document) New(bean *data.Document) error {
 	}
 	if _, err = session.InsertOne(bean); err != nil {
 		return err
-	}
-	dir := GetRootPath() + "/" + fmt.Sprint(bean.Id)
-	if err = os.MkdirAll(dir, 0774); err != nil {
-		return nil
 	}
 
 	if tag.Id != 0 {

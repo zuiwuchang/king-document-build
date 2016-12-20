@@ -1,4 +1,5 @@
 var NewChapter = function(initObj){
+	"use strict";
 	var language = initObj.Language;
 	var oldVal = initObj.OldVal;
 
@@ -207,6 +208,10 @@ var NewChapter = function(initObj){
 			var url = "/Edit?id=" + node.id;
 			window.open(url);
 		};
+		var actionView = function(tree,node){
+			var url = "/Chapter?id=" + node.id;
+			window.open(url);
+		};
 		jqTree.jstree({
 			plugins : [
 				"conditionalselect",
@@ -244,6 +249,7 @@ var NewChapter = function(initObj){
 							label:language["menu view"],
 							icon:"/public/img/cloud_16px.ico",
 							action:function(){
+								actionView(tree,node);
 							},
 						},
 						edit:{

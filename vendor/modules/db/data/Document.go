@@ -54,4 +54,6 @@ type Section struct {
 
 	//節點 顯示 順序
 	Sort int64
+
+	Str string `xorm:"-"`
 }

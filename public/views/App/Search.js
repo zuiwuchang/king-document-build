@@ -1,4 +1,5 @@
 var NewContext = function(initObj){
+	"use strict";
 	var language = initObj.Language;
 	var ICON_WAIT = "/public/img/throbber.gif"
 	

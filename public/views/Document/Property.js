@@ -1,4 +1,5 @@
 var NewProperty = function(initObj){
+	"use strict";
 	var language = initObj.Language;
 	var oldVal = initObj.OldVal;
 
