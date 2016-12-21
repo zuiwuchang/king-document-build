@@ -89,3 +89,4 @@ chapter.edit.wait init data=初始化數據中 ...
 chapter.edit.new section=新段落
 chapter.edit.section data ok=ok
 chapter.edit.section data no=未保存
+chapter.edit.input section name=請輸入新的段落名

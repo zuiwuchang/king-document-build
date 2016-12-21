@@ -81,14 +81,16 @@ func (s *Section) Save(id int64, val string) error {
 	return nil
 }
 
-/*func (p *Panel) Rename(bean *data.Panel) error {
+func (s *Section) Rename(bean *data.Section) error {
 	if n, err := GetEngine().Id(bean.Id).MustCols("name").Update(bean); err != nil {
 		return err
 	} else if n == 0 {
-		return fmt.Errorf("panel id not found (%v)", n)
+		return fmt.Errorf("section id not found (%v)", n)
 	}
 	return nil
 }
+
+/*
 func (p *Panel) Sort(ids []int64) error {
 	session := NewSession()
 	defer session.Close()

@@ -279,11 +279,23 @@ var NewContext = function(initObj){
 
 		//jq
 		var jqView = $("#idPanelsView");
-		var html = "<div class='panel panel-default'><a name='panel-" +
-			id + "'></a><div class='panel-heading'><span class='glyphicon glyphicon-minus kBtnSpan kBtnMenuHide'></span><span class='glyphicon glyphicon-sort-by-attributes kBtnSpan kBtnMenuSort'></span><span class='kPanelName'>" +
-			 name + "</span></div><div class='panel-body'><div class='kPanelHide' style='display: none;'>" + 
-			 language["data is hide"] + "</div>" + "<div class='kPanelBody'><div class='kPanelBodyView'>" +
-			 language["wait init data"] + "</div><div class='kSectionNode'><span class='glyphicon glyphicon-plus kBtnSpan kBtnAddSection'></span></div></div></div></div>";
+		var html = "<div class='panel panel-default'>" + 
+				"<a name='panel-" + id + "'></a>" + 
+				"<div class='panel-heading'>" + 
+					"<span class='glyphicon glyphicon-minus kBtnSpan kBtnMenuHide'></span>" + 
+					"<span class='glyphicon glyphicon-sort-by-attributes kBtnSpan kBtnMenuSort'>" + 
+					"</span><span class='kPanelName'>" + name + "</span>" + 
+				"</div>" + 
+				"<div class='panel-body'>" + 
+					"<div class='kPanelHide' style='display: none;'>" + language["data is hide"] + "</div>" + 
+					"<div class='kPanelBody'>" + 
+						"<div class='kPanelBodyView'>" + language["wait init data"] + "</div>" + 
+						"<div class='kSectionNode'>" + 
+							"<span class='glyphicon glyphicon-plus kBtnSpan kBtnAddSection'></span>" + 
+						"</div>" +
+					"</div>" +
+				"</div>" + 
+			"</div>";
 		var jq = $(html);
 		jqView.append(jq);
 
@@ -305,7 +317,7 @@ var NewContext = function(initObj){
 						"<span class='glyphicon glyphicon-minus kBtnSpan'></span>" + 
 						"<span class='glyphicon glyphicon-wrench kBtnSpan'></span>" + 
 						"<span class='glyphicon glyphicon-remove kBtnSpan'></span>" + 
-						name +
+						"<span class='kTitleName'>" + name + "</span>" +
 					"</h4>" + 
 					"<div class='kSectionHide'>" + language["data is hide"] + "</div>" +
 					"<div class='kSectionBody'>" + 
@@ -316,6 +328,9 @@ var NewContext = function(initObj){
 				"</div>";
 
 			var jq = $(html);
+			var jqTitle = jq.find('.kSectionTitle:first');
+			var jqName = jqTitle.find('.kTitleName:first');
+
 			var jqHide = jq.find('.kSectionHide:first');
 			var jqShow = jq.find('.kSectionBody:first');
 
@@ -372,7 +387,7 @@ var NewContext = function(initObj){
 				jqText.val(oldVal);
 			}
 			var editor = KindEditor.create(jqText, {
-				resizeType:1,
+				resizeType:0,
 				width:'100%',
 				items:[
 					'source', 
@@ -398,7 +413,13 @@ var NewContext = function(initObj){
 						return;
 					}
 					var html = this.html();
-					newObj.UpdateStatus(html);					
+					newObj.UpdateStatus(html);
+
+					 var autoheight = this.edit.doc.body.scrollHeight;
+					 if(autoheight < 100){
+					 	autoheight = 100;
+					 }
+					this.edit.setHeight(autoheight);
 				},
 			});
 			editor._k_ctx = newObj;
@@ -408,10 +429,43 @@ var NewContext = function(initObj){
 				oldVal = "";
 			}
 
+			var ajaxRename = function(val){
+				if(name == val){
+					return;
+				}
+				if(!isDataOk()){
+					return;
+				}
+
+				setDataWait();
+				$.ajax({
+					url: '/Section/AjaxRename',
+					type: 'POST',
+					dataType: 'json',
+					data: {id:id,name:val},
+				}).done(function(result) {
+					if(result.Code == 0){
+						name = val;
+						jqName.text(name);
+					}else{
+						modal.Show(language["err.title"],result.Emsg);
+					}
+				}).fail(function() {
+					modal.Show(language["err.title"],language["err net"]);
+				}).always(function() {
+					setDataOk();
+				});
+			};
 			//event
-			jq.find('.glyphicon-minus:first').click(function(event) {
+			jqTitle.find('.glyphicon-minus:first').click(function(event) {
 				jqHide.toggle("fast");
 				jqShow.toggle("fast");
+			});
+			jqTitle.find('.glyphicon-wrench:first').click(function(event) {
+				modalInput.Show(language["input section"],name,function(modal,val){
+					modal.Hide();
+					ajaxRename(val);					
+				});
 			});
 			jqSectionStatus.find('.glyphicon-wrench:first').click(function(event) {
 				if(jqSectionView.is(":visible")){

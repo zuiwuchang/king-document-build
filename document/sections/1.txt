@@ -1,7 +1,4 @@
 <p>
-	1<span style="background-color:#E53333;">23</span> 
+	123
+	45&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;6
 </p>
-<p>
-	dfs51
-</p>
-<br />
