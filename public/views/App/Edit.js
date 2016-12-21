@@ -3,32 +3,6 @@ var NewContext = function(initObj){
 	var language = initObj.Language;
 	var mainTitleName = "king document build";
 
-	//爲 KindEditor 增加擴展
-	KindEditor.plugin('mypreview', function(K) {
-		var name = 'mypreview';
-		var editor = this;
-
-		editor.clickToolbar(name, function() {
-			var k_ctx = editor._k_ctx;
-			var html = editor.html();
-			k_ctx.ShowPreview(html);
-		});
-	});
-	KindEditor.plugin('mysave', function(K) {
-		var name = 'mysave';
-		var editor = this;
-
-		editor.clickToolbar(name, function() {
-			var k_ctx = editor._k_ctx;
-			var html = editor.html();
-			k_ctx.Save(html);
-		});
-	});
-	KindEditor.lang({
-		mypreview:language["preview"],
-		mysave:language["save section"],
-	});
-
 	//輸入 框
 	var newModalInput = function(){
 		var jqBtnShow = $("#idBtnModalInput");
@@ -335,7 +309,7 @@ var NewContext = function(initObj){
 					"</h4>" + 
 					"<div class='kSectionHide'>" + language["data is hide"] + "</div>" +
 					"<div class='kSectionBody'>" + 
-						"<div class='kSectionViewHide'><span class='glyphicon glyphicon-wrench kBtnSpan'></span></div>" +
+						"<div class='kSectionViewStatus'><span class='glyphicon glyphicon-wrench kBtnSpan'></span><span class='glyphicon glyphicon-save kBtnSpan'></span><span class='kSectionSaveStatus'>" + language["section ok"] + "</span></div>" +
 						"<div class='kSectionView'></div>" +
 						"<div class='kSectionEdit'><textarea class='kEditor'></textarea></div>" +
 					"</div>" +
@@ -345,15 +319,16 @@ var NewContext = function(initObj){
 			var jqHide = jq.find('.kSectionHide:first');
 			var jqShow = jq.find('.kSectionBody:first');
 
-			var jqSectionHide = jq.find('.kSectionViewHide:first');
+			var jqSectionStatus = jq.find('.kSectionViewStatus:first');
 			var jqSectionView = jq.find('.kSectionView:first');
 			var jqSectionEdit = jq.find('.kSectionEdit:first');
 			jqView.append(jq);
+
+			var jqSectionSaveStatus = jqSectionStatus.find('.kSectionSaveStatus:first');
 			var newObj = {
 				ShowPreview:function(html){
 					jqSectionEdit.hide();
 					jqSectionView.html(html);
-					jqSectionHide.show();
 					jqSectionView.show();
 				},
 				Save:function(html){
@@ -361,6 +336,7 @@ var NewContext = function(initObj){
 						modal.Show(language["warning.title"],language["data not need save"]);
 						return;
 					}
+					var ctx = this;
 					$.ajax({
 						url: '/Section/AjaxSave',
 						type: 'POST',
@@ -370,7 +346,7 @@ var NewContext = function(initObj){
 					.done(function(result) {
 						if(result.Code == 0){
 							oldVal = html;
-							modal.Show(mainTitleName,language["data save ok"]);
+							ctx.UpdateStatus();
 						}else{
 							modal.Show(language["err.title"],result.Emsg);
 						}
@@ -378,6 +354,17 @@ var NewContext = function(initObj){
 					.fail(function() {
 						modal.Show(language["err.title"],language["err net"]);
 					});
+				},
+				UpdateStatus:function(html){
+					if(html){
+						if(html == oldVal){
+							jqSectionSaveStatus.text(language["section ok"]);
+						}else{
+							jqSectionSaveStatus.text(language["section no"]);
+						}
+					}else{
+						jqSectionSaveStatus.text(language["section ok"]);
+					}
 				},
 			};
 			var jqText = jqSectionEdit.find('.kEditor');
@@ -388,8 +375,7 @@ var NewContext = function(initObj){
 				resizeType:1,
 				width:'100%',
 				items:[
-					'mysave',
-					'|', 'mypreview','source', 
+					'source', 
 					'|', 'undo', 'redo', /*'|', 'preview', 'print', 'template',*/ 
 					'|', 'code', 
 					'|', 'cut','copy', 'paste',
@@ -404,6 +390,16 @@ var NewContext = function(initObj){
 					'|', 'image', 'multiimage',/*'flash', 'media',*/ 'insertfile', 'table', /*'hr', */'emoticons', /*'baidumap', 'pagebreak',
 					'anchor',*/ 'link', 'unlink', /*'|', 'about'*/
 				],
+				afterCreate:function(){
+					newObj._isCreate = true;
+				},
+				afterChange:function(){
+					if(!newObj._isCreate){
+						return;
+					}
+					var html = this.html();
+					newObj.UpdateStatus(html);					
+				},
 			});
 			editor._k_ctx = newObj;
 			if(oldVal || oldVal == ""){
@@ -417,11 +413,19 @@ var NewContext = function(initObj){
 				jqHide.toggle("fast");
 				jqShow.toggle("fast");
 			});
-			jqSectionHide.find('.glyphicon-wrench:first').click(function(event) {
-				jqSectionHide.hide();
-				jqSectionView.html('');
-				jqSectionView.hide();
-				jqSectionEdit.show();
+			jqSectionStatus.find('.glyphicon-wrench:first').click(function(event) {
+				if(jqSectionView.is(":visible")){
+					jqSectionView.html('');
+					jqSectionView.hide();
+					jqSectionEdit.show();
+				}else{
+					var html = editor.html();
+					newObj.ShowPreview(html);
+				}
+			});
+			jqSectionStatus.find('.glyphicon-save:first').click(function(event) {
+				var html = editor.html();
+				newObj.Save(html);
 			});
 		};
 		//init

@@ -17,23 +17,6 @@
 .kSectionHide{
 	display: none;
 }
-
-.ke-icon-mypreview {
-	background-image: url(../skins/default/default.gif);
-	background-position: 0px -16px;
-	width: 16px;
-	height: 16px;
-}
-.ke-icon-mysave {
-	background-image: url(../skins/default/default.gif);
-	background-position: 0px -1072px;
-	width: 16px;
-	height: 16px;
-}
-
-.kSectionViewHide{
-	display: none;
-}
 </style>
 
 <div class="container k-view">
@@ -147,9 +130,10 @@ KindEditor.ready(function(K) {
 			"data is hide":{{msg . "data is hide"}},
 			"wait init data":{{msg . "chapter.edit.wait init data"}},
 
-			"preview":{{msg . "chapter.edit.preview"}},
-			"save section":{{msg . "chapter.edit.save section"}},
 			"new section":{{msg . "chapter.edit.new section"}},
+
+			"section ok":{{msg . "chapter.edit.section data ok"}},
+			"section no":{{msg . "chapter.edit.section data no"}},
 		},
 		Panels:[
 {{range .panels}}
