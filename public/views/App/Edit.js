@@ -413,9 +413,10 @@ var NewContext = function(initObj){
 		var html = "<div class='panel panel-default'>" + 
 				"<a name='panel-" + id + "'></a>" + 
 				"<div class='panel-heading'>" + 
+					"<span class='glyphicon glyphicon-asterisk kBtnSpan kBtnTop'></span>" + 
 					"<span class='glyphicon glyphicon-minus kBtnSpan kBtnMenuHide'></span>" + 
-					"<span class='glyphicon glyphicon-sort-by-attributes kBtnSpan kBtnMenuSort'>" + 
-					"</span><span class='kPanelName'>" + name + "</span>" + 
+					"<span class='glyphicon glyphicon-sort-by-attributes kBtnSpan kBtnMenuSort'></span>" + 
+					"<span class='kPanelName'>" + name + "</span>" + 
 				"</div>" + 
 				"<div class='panel-body'>" + 
 					"<div class='kPanelHide' style='display: none;'>" + language["data is hide"] + "</div>" + 
@@ -437,7 +438,7 @@ var NewContext = function(initObj){
 		var jqBodyView = jqBody.find('.kPanelBodyView:first');
 
 		var jqAddSection = jq.find('.kBtnAddSection:first');
-		//jqAddSection.hide();
+		jqAddSection.hide();
 
 		//sections
 		var _sections = [];
@@ -657,6 +658,9 @@ var NewContext = function(initObj){
 		initData(id);
 
 		//event
+		jq.find('.kBtnTop:first').click(function(event) {
+			location.href="#top";
+		});
 		jq.find('.kBtnMenuHide:first').click(function(event) {
 			jqHide.toggle("fast");
 			jqBody.toggle("fast");

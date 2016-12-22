@@ -1,0 +1,83 @@
+{{set . "title" (msg . "chapter.edit.title")}}
+{{template "header.html" .}}
+
+<style type="text/css">
+.kBtnSpan{
+	padding-right: 5px;
+	cursor: pointer;
+}
+.kSectionNode{
+	margin-top: 7px;
+}
+.kSectionHide{
+	display: none;
+}
+</style>
+
+<div class="container k-view">
+<a name="#top"></a>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<span class="kBtnSpan" id="idBtnToggle">
+		{{.document.Name}} - {{.chapter.Name}}
+		</span>
+	</div>
+	<div class="panel-body">
+		<div id="idBodyHide" style="display: none;">{{msg .  "data is hide"}}</div>
+		<div id="idBodyView">
+			<ul class="list-group">
+			{{range .panels}}
+				<li class='list-group-item'><a href="#panel-{{.Id}}">{{.Name}}</a></li>
+			{{end}}
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="idPanelsView"></div>
+
+</div>
+
+
+{{template "footer.html" .}}
+
+
+
+
+
+
+<!--	google code prettify	-->
+<link rel="stylesheet" type="text/css" href="/public/js/code-prettify/src/prettify.css">
+<link rel="stylesheet" type="text/css" href="/public/js/code-prettify/styles/sons-of-obsidian.css">
+<script src="/public/js/code-prettify/src/prettify.js"></script>
+
+
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/App/Chapter.js"></script>
+{{else}}
+	<script src="/public/views/App/Chapter.min.js"></script>
+{{end}}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var title  = '{{.document.Name}}' + ' - ' + '{{.chapter.Name}}';
+	document.title = title;
+	NewContext({
+		Language:{
+			"err net":{{msg . "err net"}},
+
+			"data is hide":{{msg . "data is hide"}},
+			"wait init data":{{msg . "chapter.edit.wait init data"}},
+		},
+		Panels:[
+{{range .panels}}
+			{
+				Id:{{.Id}},
+				Name:{{.Name}},
+			},
+{{end}}
+		],
+	});
+});
+</script>
