@@ -1,3 +1,12 @@
+<pre class="prettyprint linenums">#include &lt;iostream&gt;
+
+void main()
+{
+	stc::cout&lt;&lt;"ok"&lt;&lt;std::endl;
+}hghj</pre>
+<pre class="prettyprint linenums">function sum(l,r){
+&nbsp;&nbsp;&nbsp;&nbsp;return l + r;
+}</pre>
 <p>
 	123
 	45&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;6

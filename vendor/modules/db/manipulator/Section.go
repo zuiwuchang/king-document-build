@@ -90,8 +90,7 @@ func (s *Section) Rename(bean *data.Section) error {
 	return nil
 }
 
-/*
-func (p *Panel) Sort(ids []int64) error {
+func (s *Section) Sort(ids []int64) error {
 	session := NewSession()
 	defer session.Close()
 	err := session.Begin()
@@ -109,12 +108,12 @@ func (p *Panel) Sort(ids []int64) error {
 	n := int64(len(ids))
 	var has bool
 	for _, id := range ids {
-		if has, err = session.Id(id).Cols("id").Get(&data.Panel{}); err != nil {
+		if has, err = session.Id(id).Cols("id").Get(&data.Section{}); err != nil {
 			return err
 		} else if !has {
-			return fmt.Errorf("panel id not found (%v)", id)
+			return fmt.Errorf("section id not found (%v)", id)
 		}
-		if _, err = session.Id(id).Update(data.Panel{Sort: n}); err != nil {
+		if _, err = session.Id(id).Update(data.Section{Sort: n}); err != nil {
 			return err
 		}
 		n--
@@ -122,4 +121,3 @@ func (p *Panel) Sort(ids []int64) error {
 
 	return nil
 }
-*/

@@ -21,8 +21,6 @@
 
 <div class="container k-view">
 
-
-
 <div class="panel panel-default">
 	<div class="panel-heading"><span class="glyphicon glyphicon-minus kBtnSpan" id="idBtnToggle"></span>{{.document.Name}} - {{.chapter.Name}}</div>
 	<div class="panel-body">
@@ -40,6 +38,34 @@
 
 <div id="idPanelsView"></div>
 
+</div>
+
+
+<!--	modal sort	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalSort" id="idBtnSort" style="display: none;">Open Modal</button>
+
+<div id="idModalSort" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">{{msg . "chapter.edit.modal sort"}}</h4>
+	</div>
+
+	<div class="modal-body">
+		<ul class='list-group' id="idModalSortBody">
+		</ul>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalSortSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalSortCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
 </div>
 
 
@@ -63,6 +89,34 @@
 	<div class="modal-footer">
 	<button type="button" class="btn btn-default" id="idModalInputSure">{{msg . "Sure"}}</button>
 	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalInputCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
+
+
+<!--	modal input textarea	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalTextarea" id="idBtnModalTextarea" style="display: none;">Open Modal</button>
+
+<div id="idModalTextarea" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title" id="idModalTextareaTitle">title</h4>
+	</div>
+
+	<div class="modal-body">
+	<p>
+		<textarea id="idModalTextareaBody" style="width: 100%;" rows="8"></textarea>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalTextareaSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalTextareaCancel">{{msg . "Cancel"}}</button>
 	</div>
 </div>
 
@@ -103,6 +157,19 @@
 <link rel="stylesheet" href="/public/js/kindeditor/themes/default/default.css" />
 <script src="/public/js/kindeditor/kindeditor-all-min.js"></script>
 <script src="/public/js/kindeditor/lang/{{.currentLocale}}.js"></script>
+<style type="text/css">
+.ke-icon-mycode {
+	background-image: url(/public/img/c_16px.ico);
+	width: 16px;
+	height: 16px;
+}
+</style>
+
+
+<!--	google code prettify	-->
+<link rel="stylesheet" type="text/css" href="/public/js/code-prettify/src/prettify.css">
+<link rel="stylesheet" type="text/css" href="/public/js/code-prettify/styles/sons-of-obsidian.css">
+<script src="/public/js/code-prettify/src/prettify.js"></script>
 
 
 
@@ -135,6 +202,9 @@ KindEditor.ready(function(K) {
 			"section ok":{{msg . "chapter.edit.section data ok"}},
 			"section no":{{msg . "chapter.edit.section data no"}},
 			"input section":{{msg . "chapter.edit.input section name"}},
+
+			"insert code":{{msg . "chapter.edit.section.insert code"}},
+			"input code":{{msg . "chapter.edit.section.input code"}},
 		},
 		Panels:[
 {{range .panels}}

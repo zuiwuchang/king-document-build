@@ -3,6 +3,58 @@ var NewContext = function(initObj){
 	var language = initObj.Language;
 	var mainTitleName = "king document build";
 
+	//排序框
+	//子節點 排序框
+	var newModalSort = function(){
+		var jqBtn = $("#idBtnSort");
+		var jqBody = $("#idModalSortBody");
+		jqBody.sortable().disableSelection();
+
+		var jqSure = $("#idModalSortSure");
+		var jqCancel = $("#idModalSortCancel");
+		var onOk = null;
+		var oldArrs = null;
+		jqSure.click(function(event) {
+			jqCancel.click();
+			if(!onOk){
+				return;
+			}
+
+			var newArrs = [];
+			var modify = false;
+			jqBody.children('li').each(function(index, el) {
+				var id = $(el).data('id');
+
+				newArrs.push(id);
+
+				if(!modify && id != oldArrs[index].Id){
+					modify = true;
+				}
+			});
+
+			if(modify){
+				onOk(newArrs);
+			}
+		});
+		return {
+			Show:function(arrs,callback){
+				oldArrs = arrs;
+				onOk = callback;
+
+				var html = "";
+				for (var i = 0; i < arrs.length; i++) {
+					var node = arrs[i];
+					html += "<li class='list-group-item' data-id='" + 
+						node.Id + "'>" + 
+						node.Name + "</li>";
+				}
+
+				jqBody.html(html);
+				jqBtn.click();
+			},
+		}
+	};
+	var modalSort = newModalSort();
 	//輸入 框
 	var newModalInput = function(){
 		var jqBtnShow = $("#idBtnModalInput");
@@ -49,6 +101,50 @@ var NewContext = function(initObj){
 	};
 	var modalInput = newModalInput();
 
+	//input Textarea
+	var newModalTextarea = function(){
+		var jqBtnShow = $("#idBtnModalTextarea");
+		var jqTitle = $("#idModalTextareaTitle");
+		var jqBody = $("#idModalTextareaBody");
+
+		var jqSure = $("#idModalTextareaSure");
+		var jqCancel = $("#idModalTextareaCancel");
+		var onOk = null;
+		var newObj = {
+			Show:function(title,text,callback){
+				if(callback){
+					onOk = callback;
+				}
+
+				jqTitle.html(title);
+				jqBody.val(text);
+				jqBtnShow.click();
+				setTimeout(function(){
+					jqBody.select().focus();
+				},200);
+			},
+			Hide:function(){
+				jqCancel.click();
+			},
+			Reset:function(){
+				jqBody.val('');
+			},
+		};
+		var actionSure = function(){
+			if(onOk){
+				var val = jqBody.val();
+				onOk(newObj,val);
+			}else{
+				jqCancel.click();
+			}
+		}
+		jqSure.click(function(event) {
+			actionSure();
+		});
+		return newObj;
+	};
+	var modalTextarea = newModalTextarea();
+
 	//消息 對話框
 	var newModalMsg = function(){
 		var jqBtnShow = $("#idBtnModalMsg");
@@ -84,6 +180,41 @@ var NewContext = function(initObj){
 	};
 	var modal = newModalMsg();
 
+	//html 轉義
+	var escapeHtml = function(html){
+		var elem = document.createElement('div')
+		var txt = document.createTextNode(html)
+		elem.appendChild(txt)
+		return elem.innerHTML;
+	}
+	// 将实体转回为HTML
+	var unescapeHtml = function(str) {
+		var elem = document.createElement('div')
+		elem.innerHTML = str
+		return elem.innerText || elem.textContent;
+	}
+
+	//擴展 kindeditor
+	KindEditor.plugin('mycode', function(K) {
+		var editor = this;
+		var name = 'mycode';
+		// 点击图标时执行
+		editor.clickToolbar(name, function() {
+			modalTextarea.Show(language["input code"],"",function(modal,val){
+				modal.Hide();
+				val = $.trim(val);
+				if(val != ""){
+					val = "<pre class='prettyprint linenums'>" + escapeHtml(val) +"</pre>";
+					editor.insertHtml(val);
+				}
+			});
+		});
+	});
+	KindEditor.lang({
+		mycode:language["insert code"],
+	});
+
+	//top list
 	var newPanelList = function(){
 		var _enable = true;
 		var enable = function(ok){
@@ -306,11 +437,16 @@ var NewContext = function(initObj){
 		var jqBodyView = jqBody.find('.kPanelBodyView:first');
 
 		var jqAddSection = jq.find('.kBtnAddSection:first');
-		jqAddSection.hide();
+		//jqAddSection.hide();
 
 		//sections
-		var _sections = {};
+		var _sections = [];
 		var newSection = function(id,name,oldVal){
+			_sections.push({
+				Id:id,
+				Name:name,
+			});
+
 			var jqView = jqBodyView;
 			var html = "<div>" +
 					"<h4 class='kSectionTitle'>" +
@@ -345,6 +481,7 @@ var NewContext = function(initObj){
 					jqSectionEdit.hide();
 					jqSectionView.html(html);
 					jqSectionView.show();
+					prettyPrint();
 				},
 				Save:function(html){
 					if(oldVal == html){
@@ -386,13 +523,21 @@ var NewContext = function(initObj){
 			if(oldVal || oldVal == ""){
 				jqText.val(oldVal);
 			}
+			var editorHeight = function(editor){
+				 var autoheight = editor.edit.doc.body.scrollHeight;
+				 if(autoheight < 100){
+				 	return;
+				 }
+				editor.edit.setHeight(autoheight);
+			};
 			var editor = KindEditor.create(jqText, {
 				resizeType:0,
 				width:'100%',
+				height:100,
 				items:[
 					'source', 
 					'|', 'undo', 'redo', /*'|', 'preview', 'print', 'template',*/ 
-					'|', 'code', 
+					'|', 'mycode', 
 					'|', 'cut','copy', 'paste',
 					'plainpaste', /*'wordpaste',*/
 					'|', 'justifyleft', 'justifycenter', 'justifyright',
@@ -415,11 +560,7 @@ var NewContext = function(initObj){
 					var html = this.html();
 					newObj.UpdateStatus(html);
 
-					 var autoheight = this.edit.doc.body.scrollHeight;
-					 if(autoheight < 100){
-					 	autoheight = 100;
-					 }
-					this.edit.setHeight(autoheight);
+					editorHeight(this);
 				},
 			});
 			editor._k_ctx = newObj;
@@ -472,6 +613,7 @@ var NewContext = function(initObj){
 					jqSectionView.html('');
 					jqSectionView.hide();
 					jqSectionEdit.show();
+					editorHeight(editor);
 				}else{
 					var html = editor.html();
 					newObj.ShowPreview(html);
@@ -483,7 +625,8 @@ var NewContext = function(initObj){
 			});
 		};
 		//init
-		(function(id){
+		var initData = function(id){
+			_sections = [];
 			//init ok
 			$.ajax({
 				url: '/Section/AjaxFind',
@@ -510,12 +653,53 @@ var NewContext = function(initObj){
 			.fail(function() {
 				jqBodyView.html(language["err net"]);
 			});
-		})(id);
+		};
+		initData(id);
 
 		//event
 		jq.find('.kBtnMenuHide:first').click(function(event) {
 			jqHide.toggle("fast");
 			jqBody.toggle("fast");
+		});
+		jq.find('.kBtnMenuSort:first').click(function(event) {
+			if(!isDataOk() || _sections.length == 0){
+				return;
+			}
+			modalSort.Show(_sections,function(arrs){
+				if(!isDataOk()){
+					return;
+				}
+
+				var updateSort = function(){
+					jqBodyView.html(language["wait init data"]);
+					initData(id);
+				};
+				
+				setDataWait();
+				var sort = arrs.join("-");
+				$.ajax({
+					url: '/Section/AjaxSort',
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						sort:sort,
+					},
+				})
+				.done(function(result) {
+					if(0 == result.Code){
+						updateSort();	
+					}else{
+						modal.Show(language["err.title"],result.Emsg);
+					}
+				})
+				.fail(function() {
+					modal.Show(language["err.title"],language["err net"]);
+				})
+				.always(function() {
+					setDataOk();
+				});
+
+			});
 		});
 		jqAddSection.click(function(event) {
 			if(isDataNo()){
@@ -562,5 +746,4 @@ var NewContext = function(initObj){
 		var panel = panels[i];
 		panelList.New(panel.Id,panel.Name);
 	}
-
 };
