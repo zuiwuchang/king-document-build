@@ -516,10 +516,11 @@ var NewContext = function(initObj){
 		//sections
 		var _sections = [];
 		var newSection = function(id,name,oldVal){
-			_sections.push({
+			var sectionInfo = {
 				Id:id,
 				Name:name,
-			});
+			};
+			_sections.push(sectionInfo);
 			var sectionId= "king-section-" + id;
 			var jqView = jqBodyView;
 			var html = "<div id='" + sectionId + "'>" +
@@ -605,9 +606,14 @@ var NewContext = function(initObj){
 				editor.edit.setHeight(autoheight);
 			};
 			var editor = KindEditor.create(jqText, {
-				resizeType:0,
+				uploadJson : '/Files/Upload?id=' + id,
+				fileManagerJson : '/Files/Find?id=' + id,
+				allowFileManager : true,
+				urlType:"relative",
+
+				resizeType:1,
 				width:'100%',
-				height:100,
+				height:400,
 				items:[
 					'source', 
 					'|', 'undo', 'redo', /*'|', 'preview', 'print', 'template',*/ 
@@ -616,13 +622,14 @@ var NewContext = function(initObj){
 					'plainpaste', /*'wordpaste',*/
 					'|', 'justifyleft', 'justifycenter', 'justifyright',
 					'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-					'superscript', 'clearhtml', 'quickformat', 'selectall', 
+					'superscript', 'clearhtml', /*'quickformat',*/ 'selectall', 
 					'|', 'fullscreen',
 					'/',
-					'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+					/*'formatblock', 'fontname', 'fontsize', 
+					'|', 'forecolor', 'hilitecolor',*/ 'bold',
 					'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', 
-					'|', 'image', 'multiimage',/*'flash', 'media',*/ 'insertfile', 'table', /*'hr', */'emoticons', /*'baidumap', 'pagebreak',
-					'anchor',*/ 'link', 'unlink', /*'|', 'about'*/
+					'|', 'image',/* 'multiimage','flash', 'media',*/ 'insertfile', 'table', /*'hr', 'emoticons', 'baidumap', 'pagebreak',
+					'anchor',*/ 'link', 'unlink', /*'|', 'about'*/,
 				],
 				afterCreate:function(){
 					newObj._isCreate = true;
@@ -634,7 +641,7 @@ var NewContext = function(initObj){
 					var html = this.html();
 					newObj.UpdateStatus(html);
 
-					editorHeight(this);
+					//editorHeight(this);
 				},
 			});
 			editor._k_ctx = newObj;
@@ -662,6 +669,7 @@ var NewContext = function(initObj){
 					if(result.Code == 0){
 						name = val;
 						jqName.text(name);
+						sectionInfo.Name = name;
 					}else{
 						modal.Show(language["err.title"],result.Emsg);
 					}
@@ -725,7 +733,7 @@ var NewContext = function(initObj){
 					jqSectionView.html('');
 					jqSectionView.hide();
 					jqSectionEdit.show();
-					editorHeight(editor);
+					//editorHeight(editor);
 				}else{
 					var html = editor.html();
 					newObj.ShowPreview(html);

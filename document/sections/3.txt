@@ -1,1 +1,1 @@
-ok<br />
+<img src="sections/3/image/heart-1.JPG" alt="" />ok<a class="ke-insertfile" href="sections/3/file/Readme.txt" target="_blank">/sections/3/file/Readme.txt</a><br />
