@@ -122,6 +122,9 @@ func (t *Tag) Remove(id int64) error {
 			if _, err = session.Id(slice[i]).Delete(data.Tag{}); err != nil {
 				return err
 			}
+			if _, err = session.Where("tag = ?", slice[i]).MustCols("tag").Update(data.Document{}); err != nil {
+				return err
+			}
 
 			var beans []data.Tag
 			if err = session.Where("pid = ?", slice[i]).Find(&beans); err != nil {
