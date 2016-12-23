@@ -117,3 +117,20 @@ func (c Section) AjaxSort(sort string) revel.Result {
 
 	return c.RenderJson(result)
 }
+func (c Section) AjaxRemove(id int64) revel.Result {
+	var result ajax.Result
+
+	if id == 0 {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = "section id not found (0)"
+		return c.RenderJson(result)
+	}
+	var mSection manipulator.Section
+	if err := mSection.Remove(id); err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+		return c.RenderJson(result)
+	}
+
+	return c.RenderJson(result)
+}

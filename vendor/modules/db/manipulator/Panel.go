@@ -2,7 +2,9 @@ package manipulator
 
 import (
 	"fmt"
+	"github.com/go-xorm/xorm"
 	"modules/db/data"
+	"os"
 )
 
 type Panel struct {
@@ -76,4 +78,42 @@ func (p *Panel) Sort(ids []int64) error {
 	}
 
 	return nil
+}
+func (p *Panel) Remove3(session *xorm.Session, id int64, strs *[]string) error {
+	var sections []data.Section
+	err := session.Where("panel = ?", id).Find(&sections)
+	if err != nil {
+		return err
+	}
+	var mSection Section
+	for i := 0; i < len(sections); i++ {
+		if err = mSection.Remove3(session, sections[i].Id, strs); err != nil {
+			return err
+		}
+	}
+	_, err = session.Id(id).Delete(data.Panel{})
+
+	return err
+}
+func (p *Panel) Remove(id int64) error {
+	session := NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+	strs := make([]string, 0, 100)
+	defer func() {
+		if err == nil {
+			for _, str := range strs {
+				os.Remove(str + ".txt")
+				os.RemoveAll(str)
+			}
+			session.Commit()
+		} else {
+			session.Rollback()
+		}
+	}()
+	err = p.Remove3(session, id, &strs)
+	return err
 }

@@ -2,7 +2,9 @@ package manipulator
 
 import (
 	"fmt"
+	"github.com/go-xorm/xorm"
 	"modules/db/data"
+	"os"
 )
 
 type Chapter struct {
@@ -71,4 +73,42 @@ func (c *Chapter) Sort(sorts []data.Sort) error {
 		}
 	}
 	return nil
+}
+func (c *Chapter) Remove3(session *xorm.Session, id int64, strs *[]string) error {
+	var panels []data.Panel
+	err := session.Where("chapter = ?", id).Find(&panels)
+	if err != nil {
+		return err
+	}
+	var mPanel Panel
+	for i := 0; i < len(panels); i++ {
+		if err = mPanel.Remove3(session, panels[i].Id, strs); err != nil {
+			return err
+		}
+	}
+	_, err = session.Id(id).Delete(data.Chapter{})
+
+	return err
+}
+func (c *Chapter) Remove(id int64) error {
+	session := NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+	strs := make([]string, 0, 100)
+	defer func() {
+		if err == nil {
+			for _, str := range strs {
+				os.Remove(str + ".txt")
+				os.RemoveAll(str)
+			}
+			session.Commit()
+		} else {
+			session.Rollback()
+		}
+	}()
+	err = c.Remove3(session, id, &strs)
+	return err
 }

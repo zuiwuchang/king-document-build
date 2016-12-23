@@ -59,3 +59,20 @@ func (c Chapter) AjaxNew(name string, doc int64) revel.Result {
 	}
 	return c.RenderJson(result)
 }
+func (c Chapter) AjaxRemove(id int64) revel.Result {
+	var result ajax.Result
+
+	if id == 0 {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = "chapter id not found (0)"
+		return c.RenderJson(result)
+	}
+	var mChapter manipulator.Chapter
+	if err := mChapter.Remove(id); err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+		return c.RenderJson(result)
+	}
+
+	return c.RenderJson(result)
+}

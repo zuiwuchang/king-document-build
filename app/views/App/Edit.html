@@ -17,6 +17,9 @@
 .kSectionHide{
 	display: none;
 }
+.kModalMsg{
+	display: none;
+}
 </style>
 
 <div class="container k-view">
@@ -148,6 +151,8 @@
 
 </div>
 </div>
+
+
 {{template "footer.html" .}}
 
 
@@ -174,8 +179,12 @@
 
 
 {{if eq .RunMode "dev"}}
+	<script src="/public/views/msg.js"></script>
+
 	<script src="/public/views/App/Edit.js"></script>
 {{else}}
+	<script src="/public/views/msg.min.js"></script>
+
 	<script src="/public/views/App/Edit.min.js"></script>
 {{end}}
 
@@ -185,6 +194,9 @@ KindEditor.ready(function(K) {
 	var ctx = NewContext({
 		K:K,
 		Language:{
+			"Cancel":{{msg . "Cancel"}},
+			"Sure":{{msg . "Sure"}},
+
 			"err.title":{{msg . "err.title"}},
 			"warning.title":{{msg . "warning.title"}},
 			"err net":{{msg . "err net"}},
@@ -205,6 +217,11 @@ KindEditor.ready(function(K) {
 
 			"insert code":{{msg . "chapter.edit.section.insert code"}},
 			"input code":{{msg . "chapter.edit.section.input code"}},
+
+			"msg warning":{{msg . "msg warning"}},
+			"sure?":{{msg . "msg are you sure"}},
+			"chapter erase":{{msg . "chapter.edit.erase"}},
+			"panel erase":{{msg . "chapter.edit.panel erase"}},
 		},
 		Panels:[
 {{range .panels}}

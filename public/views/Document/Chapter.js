@@ -107,6 +107,43 @@ var NewChapter = function(initObj){
 	};
 	var modalSort = newModalSort();
 
+	var ui = kingui;
+	var newMsg = function(id){
+		var onOk = null;
+		var newObj = {
+			Hide:function(){
+				msg.Hide();
+			},
+			Show:function(title,text,callback){
+				onOk = callback;
+				msg.Show(title,text);
+			},
+		};
+		var msg = ui.NewMsg({
+			Id:id,
+			Btns:[
+				{
+					Name:language["Sure"],
+					Callback:function(){
+						if(onOk){
+							onOk.bind(newObj)();
+						}else{
+							this.Hide();
+						}
+					},
+				},
+				{
+					Name:language["Cancel"],
+				},
+			],
+		});
+		return newObj;
+	};
+	var msgid = 1;
+	var modal = newMsg(msgid++);
+	var modalError = newMsg(msgid++);
+
+
 	//tree
 	var newTree = function(){
 		var ICON_WAIT = "/public/img/throbber.gif";
@@ -212,6 +249,39 @@ var NewChapter = function(initObj){
 			var url = "/Chapter?id=" + node.id;
 			window.open(url);
 		};
+		var ajaxRemove = function(tree,node){
+			if(isDisable()){
+				return;
+			}
+			enable(false);
+			var id = node.id;
+			$.ajax({
+				url: '/Chapter/AjaxRemove',
+				type: 'POST',
+				dataType: 'json',
+				data: {id:id},
+			}).done(function(result) {
+				if(result.Code == 0){
+					tree.delete_node(node);
+				}else{
+					modalError.Show(language["err.title"],result.Emsg);
+				}
+			}).fail(function() {
+				modalError.Show(language["err.title"],language["err net"]);	
+			}).always(function() {
+				enable(true);
+			});
+		};
+		var actionRemove = function(tree,node){
+			if(isDisable()){
+				return;
+			}
+			var str = language["erase"] + " - " + tree.get_text(node) + "<br/>" + language["sure?"];
+			modal.Show(language["msg warning"],str,function(){
+				this.Hide();
+				ajaxRemove(tree,node);
+			});
+		};
 		jqTree.jstree({
 			plugins : [
 				"conditionalselect",
@@ -278,6 +348,7 @@ var NewChapter = function(initObj){
 								if(isDisable()){
 									return;
 								}
+								actionRemove(tree,node);
 							},
 						},
 					};

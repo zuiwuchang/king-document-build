@@ -2,6 +2,7 @@ package manipulator
 
 import (
 	"fmt"
+	"github.com/go-xorm/xorm"
 	"io/ioutil"
 	"modules/db/data"
 	"os"
@@ -120,4 +121,36 @@ func (s *Section) Sort(ids []int64) error {
 	}
 
 	return nil
+}
+func (s *Section) Remove3(session *xorm.Session, id int64, strs *[]string) error {
+	_, err := session.Id(id).Delete(data.Section{})
+	if err != nil {
+		return err
+	}
+	if strs != nil {
+		*strs = append(*strs, GetRootPath()+"/sections/"+fmt.Sprint(id))
+	}
+	return nil
+}
+func (s *Section) Remove(id int64) error {
+	session := NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+	strs := make([]string, 0, 100)
+	defer func() {
+		if err == nil {
+			for _, str := range strs {
+				os.Remove(str + ".txt")
+				os.RemoveAll(str)
+			}
+			session.Commit()
+		} else {
+			session.Rollback()
+		}
+	}()
+	err = s.Remove3(session, id, &strs)
+	return err
 }

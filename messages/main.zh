@@ -7,6 +7,10 @@ data is none=沒有數據
 data not need save=沒有需要保存的數據 ...
 data save ok=數據保存成功
 
+
+msg warning=警告
+msg are you sure=此操作不可撤銷，請確認？
+
 #
 app.What=這是孤爲了整理所學開發的一個文檔編輯工具
 app.Search=查找檔案
@@ -67,6 +71,8 @@ edit.chapter.menu edit=編輯章節
 
 edit.chapter.modal sort=排序章節
 
+edit.chapter.erase=你正在刪除章節
+
 
 
 
@@ -84,6 +90,7 @@ search.data hide=數據已隱藏 ...
 #chapter
 chapter.edit.title=章節編輯
 chapter.edit.new panel=新面板
+chapter.edit.panel erase=你正在刪除面板
 chapter.edit.input chapter name=請輸入新的章節名
 chapter.edit.wait init data=初始化數據中 ...
 chapter.edit.new section=新段落
@@ -91,6 +98,8 @@ chapter.edit.section data ok=ok
 chapter.edit.section data no=未保存
 chapter.edit.input section name=請輸入新的段落名
 
+
 chapter.edit.section.insert code=插入代碼
 chapter.edit.section.input code=請輸入代碼
 chapter.edit.modal sort=排序段落
+chapter.edit.erase=你正在刪除段落

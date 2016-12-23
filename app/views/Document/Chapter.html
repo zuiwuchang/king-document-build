@@ -49,8 +49,12 @@
 
 
 {{if eq .RunMode "dev"}}
+	<script src="/public/views/msg.js"></script>
+
 	<script src="/public/views/Document/Chapter.js"></script>
 {{else}}
+	<script src="/public/views/msg.min.js"></script>
+
 	<script src="/public/views/Document/Chapter.min.js"></script>
 {{end}}
 
@@ -70,6 +74,14 @@ $(document).ready(function() {
 
 			
 			"new name":{{msg . "edit.chapter.new name"}},
+
+			"Cancel":{{msg . "Cancel"}},
+			"Sure":{{msg . "Sure"}},
+			"err.title":{{msg . "err.title"}},
+
+			"erase":{{msg . "edit.chapter.erase"}},
+			"msg warning":{{msg . "msg warning"}},
+			"sure?":{{msg . "msg are you sure"}},
 		},
 		Id:{{.id}},
 		Data:[

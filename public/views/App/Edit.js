@@ -179,6 +179,42 @@ var NewContext = function(initObj){
 		return newObj;
 	};
 	var modal = newModalMsg();
+	
+	var ui = kingui;
+	var newMsg = function(id){
+		var onOk = null;
+		var newObj = {
+			Hide:function(){
+				msg.Hide();
+			},
+			Show:function(title,text,callback){
+				onOk = callback;
+				msg.Show(title,text);
+			},
+		};
+		var msg = ui.NewMsg({
+			Id:id,
+			Btns:[
+				{
+					Name:language["Sure"],
+					Callback:function(){
+						if(onOk){
+							onOk.bind(newObj)();
+						}else{
+							this.Hide();
+						}
+					},
+				},
+				{
+					Name:language["Cancel"],
+				},
+			],
+		});
+		return newObj;
+	};
+	var msgid = 1;
+	var modalError = newMsg(msgid++);
+	
 
 	//html 轉義
 	var escapeHtml = function(html){
@@ -284,6 +320,7 @@ var NewContext = function(initObj){
 		}).disableSelection();
 		var onNewItem = null;
 		var onRename = null;
+		var onRemove = null;
 		var newItem = function(id,name){
 			_sorts.push(id);
 
@@ -313,9 +350,9 @@ var NewContext = function(initObj){
 
 				enable(false);
 				$.ajax({
-					url: '/Panel/AjaxRename',
-					type: 'POST',
-					dataType: 'json',
+					url:'/Panel/AjaxRename',
+					type:'POST',
+					dataType:'json',
 					data: {id:id,name:val},
 				}).done(function(result) {
 					if(result.Code == 0){
@@ -333,6 +370,36 @@ var NewContext = function(initObj){
 					enable(true);
 				});
 			};
+			//刪除
+			var doRemove = function(id){
+				if(onRemove){
+					onRemove(id,name);
+				}
+				jq.remove();
+			};
+			var ajaxRemove = function(id){
+				if(isDisable()){
+					return;
+				}
+
+				enable(false);
+				$.ajax({
+					url: '/Panel/AjaxRemove',
+					type: 'POST',
+					dataType: 'json',
+					data: {id:id},
+				}).done(function(result) {
+					if(result.Code == 0){
+						doRemove(id);
+					}else{
+						modalError.Show(language["err.title"],result.Emsg);
+					}
+				}).fail(function() {
+					modalError.Show(language["err.title"],language["err net"]);
+				}).always(function() {
+					enable(true);
+				});
+			};
 			//event
 			jq.find('.glyphicon-wrench').click(function(event) {
 				modalInput.Show(language["input chapter"],name,function(modal,val){
@@ -341,7 +408,11 @@ var NewContext = function(initObj){
 				});
 			});
 			jq.find('.glyphicon-remove').click(function(event) {
-				alert(id + " remove");
+				var title = language["panel erase"] + " - " + name + "<br>" + language["sure?"];
+				modal.Show(language["msg warning"],title,function(modal){
+					modal.Hide();
+					ajaxRemove(id);	
+				});
 			});
 		};
 
@@ -381,6 +452,8 @@ var NewContext = function(initObj){
 					onNewItem = callback;
 				}else if(name == "item.rename"){
 					onRename = callback;
+				}else if(name == "item.remove"){
+					onRemove = callback;
 				}
 			},
 			New:function(id,name){
@@ -447,9 +520,9 @@ var NewContext = function(initObj){
 				Id:id,
 				Name:name,
 			});
-
+			var sectionId= "king-section-" + id;
 			var jqView = jqBodyView;
-			var html = "<div>" +
+			var html = "<div id='" + sectionId + "'>" +
 					"<h4 class='kSectionTitle'>" +
 						"<span class='glyphicon glyphicon-minus kBtnSpan'></span>" + 
 						"<span class='glyphicon glyphicon-wrench kBtnSpan'></span>" + 
@@ -598,6 +671,36 @@ var NewContext = function(initObj){
 					setDataOk();
 				});
 			};
+			var ajaxRemove = function(val){
+				if(!isDataOk()){
+					return;
+				}
+
+				setDataWait();
+				$.ajax({
+					url: '/Section/AjaxRemove',
+					type: 'POST',
+					dataType: 'json',
+					data: {id:id},
+				}).done(function(result) {
+					if(result.Code == 0){
+						jqView.find('#' + sectionId).remove();
+						var arrs = [];
+						for (var i = 0; i < _sections.length; i++) {
+							if(_sections[i].Id != id){
+								arrs.push(_sections[i]);
+							}
+						}
+						_sections = arrs;
+					}else{
+						modalError.Show(language["err.title"],result.Emsg);
+					}
+				}).fail(function() {
+					modalError.Show(language["err.title"],language["err net"]);
+				}).always(function() {
+					setDataOk();
+				});
+			};
 			//event
 			jqTitle.find('.glyphicon-minus:first').click(function(event) {
 				jqHide.toggle("fast");
@@ -609,6 +712,14 @@ var NewContext = function(initObj){
 					ajaxRename(val);					
 				});
 			});
+			jqTitle.find('.glyphicon-remove:first').click(function(event) {
+				var title = language["chapter erase"] + " - " + name + "<br>" + language["sure?"];
+				modal.Show(language["msg warning"],title,function(modal){
+					modal.Hide();
+					ajaxRemove(id);	
+				});
+			});
+			
 			jqSectionStatus.find('.glyphicon-wrench:first').click(function(event) {
 				if(jqSectionView.is(":visible")){
 					jqSectionView.html('');
@@ -732,6 +843,9 @@ var NewContext = function(initObj){
 			Rename:function(name){
 				jqName.text(name);
 			},
+			Remove:function(){
+				jq.remove();
+			},
 		};
 	};
 	//panel list
@@ -742,6 +856,10 @@ var NewContext = function(initObj){
 	});
 	panelList.Bind("item.rename",function(id,name){
 		panelsView[id].Rename(name);
+	});
+	panelList.Bind("item.remove",function(id,name){
+		panelsView[id].Remove();
+		delete panelsView[id];
 	});
 
 	//init panel

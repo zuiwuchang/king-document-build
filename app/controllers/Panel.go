@@ -81,3 +81,20 @@ func (c Panel) AjaxSort(sort string) revel.Result {
 
 	return c.RenderJson(result)
 }
+func (c Panel) AjaxRemove(id int64) revel.Result {
+	var result ajax.Result
+
+	if id == 0 {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = "panel id not found (0)"
+		return c.RenderJson(result)
+	}
+	var mPanel manipulator.Panel
+	if err := mPanel.Remove(id); err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+		return c.RenderJson(result)
+	}
+
+	return c.RenderJson(result)
+}
