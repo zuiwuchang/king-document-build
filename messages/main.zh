@@ -16,6 +16,7 @@ app.What=這是孤爲了整理所學開發的一個文檔編輯工具
 app.Search=查找檔案
 app.New=新建檔案
 app.Tags=標籤管理
+app.Create Offline=離線檔案
 
 #tag
 tag.Title=標籤管理
@@ -103,3 +104,8 @@ chapter.edit.section.insert code=插入代碼
 chapter.edit.section.input code=請輸入代碼
 chapter.edit.modal sort=排序段落
 chapter.edit.erase=你正在刪除段落
+
+
+#offline
+offline.title=離線檔案
+offline.ok=檔案創建成功
