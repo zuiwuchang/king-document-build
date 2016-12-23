@@ -2,7 +2,9 @@ package manipulator
 
 import (
 	"fmt"
+	"github.com/go-xorm/xorm"
 	"modules/db/data"
+	"os"
 )
 
 type Document struct {
@@ -114,4 +116,61 @@ func (d *Document) Count(tag int64) (int64, error) {
 
 func (d *Document) FindByTag(tag int64, beans *[]data.Document) error {
 	return GetEngine().Where("tag = ?", tag).Find(beans)
+}
+func (d *Document) Remove3(session *xorm.Session, id int64, strs *[]string) error {
+	var chapters []data.Chapter
+	err := session.Where("doc = ?", id).Find(&chapters)
+	if err != nil {
+		return err
+	}
+	var mChapter Chapter
+	for i := 0; i < len(chapters); i++ {
+		if err = mChapter.Remove3(session, chapters[i].Id, strs); err != nil {
+			return err
+		}
+	}
+
+	var doc data.Document
+	if has, err := session.Id(id).Get(&doc); err != nil {
+		return err
+	} else if !has {
+		return nil
+	}
+
+	var tag data.Tag
+	if _, err = session.Id(doc.Tag).Get(&tag); err != nil {
+		return fmt.Errorf("tag id not found (%v)", doc.Tag)
+	}
+	if tag.Docs > 0 {
+		tag.Docs--
+		if _, err = session.Id(doc.Tag).Update(&tag); err != nil {
+			return err
+		}
+	}
+
+	_, err = session.Id(id).Delete(data.Document{})
+
+	return err
+}
+func (d *Document) Remove(id int64) error {
+	session := NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+	strs := make([]string, 0, 100)
+	defer func() {
+		if err == nil {
+			for _, str := range strs {
+				os.Remove(str + ".txt")
+				os.RemoveAll(str)
+			}
+			session.Commit()
+		} else {
+			session.Rollback()
+		}
+	}()
+	err = d.Remove3(session, id, &strs)
+	return err
 }

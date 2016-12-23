@@ -2,7 +2,7 @@
 {{template "header.html" .}}
 
 <style type="text/css">
-.kBtnEdit{
+.kBtnSpan{
 	padding-right: 5px;
 	cursor: pointer;
 }
@@ -38,32 +38,6 @@
 </div>
 
 
-
-<!--	modal msg	-->
-<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalMsg" id="idBtnModalMsg" style="display: none;">Open Modal</button>
-
-<div id="idModalMsg" class="modal fade" role="dialog">
-<div class="modal-dialog">
-
-<!-- Modal content-->
-<div class="modal-content">
-	<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal">&times;</button>
-	<h4 class="modal-title" id="idModalMsgTitle">title</h4>
-	</div>
-
-	<div class="modal-body">
-	<p id="idModalMsgBody">body</p>
-	</div>
-
-	<div class="modal-footer">
-	<button type="button" class="btn btn-default" id="idModalMsgSure">{{msg . "Sure"}}</button>
-	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalMsgCancel">{{msg . "Cancel"}}</button>
-	</div>
-</div>
-
-</div>
-</div>
 {{template "footer.html" .}}
 
 
@@ -72,8 +46,12 @@
 
 
 {{if eq .RunMode "dev"}}
+	<script src="/public/views/msg.js"></script>
+
 	<script src="/public/views/App/Search.js"></script>
 {{else}}
+	<script src="/public/views/msg.min.js"></script>
+
 	<script src="/public/views/App/Search.min.js"></script>
 {{end}}
 
@@ -81,6 +59,9 @@
 $(document).ready(function() {
 	NewContext({
 		Language:{
+			"Sure":{{msg . "Sure"}},
+			"Cancel":{{msg . "Cancel"}},
+
 			"toggle tag":{{msg . "search.toggle tag"}},
 			"search tag":{{msg . "search.search tag"}},
 
@@ -88,6 +69,11 @@ $(document).ready(function() {
 			"err net":{{msg . "err net"}},
 
 			"none data":{{msg . "search.none data"}},
+
+			"err.title":{{msg . "err.title"}},
+			"msg warning":{{msg . "msg warning"}},
+			"sure?":{{msg . "msg are you sure"}},
+			"erase":{{msg . "search.erase"}},
 		},
 		Data:[
 			{
@@ -110,6 +96,7 @@ $(document).ready(function() {
 				data:{
 					Sort:{{.Sort}},
 					Docs:{{.Docs}},
+					Name:{{.Name}},
 				},
 			},
 {{end}}

@@ -114,3 +114,20 @@ func (c Document) AjaxModify(id, tag int64, name string) revel.Result {
 	}
 	return c.RenderJson(result)
 }
+func (c Document) AjaxRemove(id int64) revel.Result {
+	var result ajax.Result
+
+	if id == 0 {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = "document id not found (0)"
+		return c.RenderJson(result)
+	}
+	var mDocument manipulator.Document
+	if err := mDocument.Remove(id); err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+		return c.RenderJson(result)
+	}
+
+	return c.RenderJson(result)
+}
