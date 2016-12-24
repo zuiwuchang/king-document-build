@@ -11,7 +11,7 @@
 {{if .tags}}
 	<ol class="breadcrumb">
 	{{range .tags}}
-		<li>{{.Name}}</li>
+		<li>{{raw .Name}}</li>
 	{{end}}
 	</ol>
 {{end}}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>章節</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="renderer" content="webkit">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=0.8">
+	<link rel="stylesheet" type="text/css" href="public/css/bootstrap-3.3.6.min.css">
+	
+	<script src="public/js/jquery-2.2.4.min.js"></script>
+	<script src="public/js/bootstrap-3.3.6.min.js"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="public/css/main.css">
+
+
+
+</head>
+<body class="k-body">
+<div class="container k-view">
+
+<div class="panel panel-default">
+	<div class="panel-heading" id="idPanelHeader">
+		章節
+	</div>
+	<div class="panel-body">
+
+	<p id="idView">
+	</p>
+
+	</div>
+</div>
+
+<div id="idPanelsView"></div>
+
+</div>
+
+<p class="k-footer-docs">writing by king</p>
+</body>
+</html>
+
+
+<script src="public/js/king-js/core.min.js"></script>
+<script src="public/js/king-js/controller/Async.min.js"></script>
+
+<script src="msg.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var getUrlParam = function(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+		var r = window.location.search.substr(1).match(reg);  
+		if (r != null){
+			return unescape(r[2]);
+		}
+		return null;
+	};
+
+	var newScript = function(paramsObj){
+		var script = document.createElement("script");
+		script.type = "text/javascript";
+		script.onload = paramsObj.OnLoad;
+		script.onerror = paramsObj.OnError;
+		script.src = paramsObj.Url;
+		document.body.appendChild(script);
+	}
+
+	//enable
+	var _enable = true;
+	var isEnable = function(){
+		return _enable;
+	};
+	var isDisable = function(){
+		return !_enable;
+	};
+	var enable = function(ok){
+		if(ok){
+			_enable = true;
+		}else{
+			_enable = false;
+		}
+	};
+
+	//msg
+	var ui = kingui;
+	var msgid = 0;
+	var modalError = ui.NewMsg(msgid++);
+	
+	
+	
+	//
+	var chapterID = getUrlParam("id");
+	var docID = getUrlParam("doc");
+	if(chapterID == null){
+		modalError.Show("錯誤","chapter id not found");
+		return;
+	}
+	if(docID == null){
+		modalError.Show("錯誤","doc id not found");
+		return;
+	}
+
+
+	//
+	var async = king.controller.NewAsync();
+	async.Sync(function(async){
+		var url = "data/docs.js";
+		newScript({
+			Url:url,
+			OnLoad:function(){
+				var docs = __v;
+				async.Notify({
+					Content:{
+						Data:docs,
+					},
+				});
+			},
+			OnError:function(){
+				async.Notify({
+					Error:url + " not found",
+				});
+			},
+		});
+	})
+	.Sync(function(async,ctx){
+		var docs = ctx.Data;
+		var doc = docs[docID];
+		if(!doc){
+			async.Notify({
+				Error:"doc id not found - " + docID,
+			});
+			return;
+		}
+		var url = "data/chapters.js";
+		newScript({
+			Url:url,
+			OnLoad:function(){
+				var chapters = __v;
+				async.Notify({
+					Content:{
+						Data:chapters,
+						DocName:doc.Name,
+					},
+				});
+			},
+			OnError:function(){
+				async.Notify({
+					Error:url + " not found",
+				});
+			},
+		});
+	})
+	.Sync(function(async,ctx){
+		var chapters = ctx.Data;
+		var chapter = chapters[chapterID];
+
+		var title  = ctx.DocName + " - " + chapter.Name;
+		document.title = title;
+		$("#idPanelHeader").html(title);
+
+		async.Notify();
+	})
+	.Sync(function(async,ctx){
+		var url = "data/chapters/" + chapterID + ".js";
+		newScript({
+			Url:url,
+			OnLoad:function(){
+				var panels = __v;
+				async.Notify({
+					Content:{
+						Data:panels,
+					},
+				});
+			},
+			OnError:function(){
+				async.Notify({
+					Error:url + " not found",
+				});
+			},
+		});
+	})
+	.Do({
+		Ok:function(ctx){
+			var panels = ctx.Data;
+			if(panels){
+				initPanels(panels);
+			}
+		},
+		Error:function(err,ctx){
+			modalError.Show("錯誤",err);
+		},
+	});
+});
+function initPanels(panels){
+	var items = [];
+	var jqPanels = $("#idPanelsView");
+	for (var i = 0; i < panels.length; i++) {
+		var panel = panels[i];
+		var str = "<li class='list-group-item'><a href='#panel-" +
+			panel.Id + "'>" +
+			panel.Name + 
+			"</a></li>"
+		items.push(str);
+
+		newPanel(jqPanels,panel);
+	}
+	$("#idView").html("<ul class='list-group'>" + items.join("") + "</ul>");
+}
+function newPanel(jqViews,panel){
+
+}
+</script>
