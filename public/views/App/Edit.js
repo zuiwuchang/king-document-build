@@ -238,7 +238,7 @@ var NewContext = function(initObj){
 		editor.clickToolbar(name, function() {
 			modalTextarea.Show(language["input code"],"",function(modal,val){
 				modal.Hide();
-				val = $.trim(val);
+				//val = $.trim(val);
 				if(val != ""){
 					val = "<pre class='prettyprint linenums'>" + escapeHtml(val) +"</pre>";
 					editor.insertHtml(val);

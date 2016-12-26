@@ -2,9 +2,10 @@ package manipulator
 
 import (
 	//_ "github.com/denisenkom/go-mssqldb"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	//_ "github.com/mattn/go-sqlite3"
 	"github.com/go-xorm/xorm"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/revel/revel"
 	"modules/db/data"
 	"strings"
@@ -36,7 +37,8 @@ func Initialize() {
 	}
 	if driver == "sqlite3" {
 		if !strings.HasPrefix(source, "/") {
-			source = GetRootPath() + source
+			source = GetRootPath() + "/" + source
+			fmt.Println("*** sqlite3", source)
 		}
 	}
 
