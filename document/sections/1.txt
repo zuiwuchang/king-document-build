@@ -1,13 +1,1 @@
-<pre class="prettyprint linenums">#include &lt;iostream&gt;
-
-void main()
-{
-	stc::cout&lt;&lt;"ok"&lt;&lt;std::endl;
-}hghj</pre>
-<pre class="prettyprint linenums">function sum(l,r){
-&nbsp;&nbsp;&nbsp;&nbsp;return l + r;
-}</pre>
-<p>
-	123
-	45&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 23
-</p>
+var __v="\u003cpre class=\"prettyprint linenums\"\u003e#include \u0026lt;iostream\u0026gt;\n\nvoid main()\n{\n\tstc::cout\u0026lt;\u0026lt;\"ok\"\u0026lt;\u0026lt;std::endl;\n}hghj\u003c/pre\u003e\n\u003cpre class=\"prettyprint linenums\"\u003efunction sum(l,r){\n\u0026nbsp;\u0026nbsp;\u0026nbsp;\u0026nbsp;return l + r;\n}\u003c/pre\u003e\n\u003cp\u003e\n\t123\n\t45\u0026nbsp;\u0026nbsp; \u0026nbsp;\u0026nbsp;\u0026nbsp; 231\n\u003c/p\u003e"

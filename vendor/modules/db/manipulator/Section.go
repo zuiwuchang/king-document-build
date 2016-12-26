@@ -1,6 +1,8 @@
 package manipulator
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/go-xorm/xorm"
 	"io/ioutil"
@@ -50,11 +52,7 @@ func (s *Section) Find(panel int64, beans *[]data.Section) error {
 }
 func (s *Section) Read(bean *data.Section) {
 	path := GetRootPath() + "/sections/" + fmt.Sprint(bean.Id) + ".txt"
-	b, e := ioutil.ReadFile(path)
-	if e != nil {
-		return
-	}
-	bean.Str = string(b)
+	s.readFile(path, &bean.Str)
 }
 func (s *Section) Save(id int64, val string) error {
 	session := NewSession()
@@ -78,10 +76,41 @@ func (s *Section) Save(id int64, val string) error {
 	}
 
 	path := GetRootPath() + "/sections/" + fmt.Sprint(id) + ".txt"
-	err = ioutil.WriteFile(path, []byte(val), 0664)
-	return nil
-}
 
+	err = s.writeFile(path, val)
+	return err
+}
+func (s *Section) readFile(path string, out *string) error {
+	b, e := ioutil.ReadFile(path)
+	if e != nil {
+		return e
+	}
+	start := len("var __v=")
+	if len(b) < start+2 {
+		return errors.New("data format error")
+	}
+	b = b[start:]
+	e = json.Unmarshal(b, out)
+	return e
+}
+func (s *Section) writeFile(path, val string) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	_, err = f.WriteString("var __v=")
+	if err != nil {
+		return err
+	}
+
+	b, err := json.Marshal(val)
+	if err != nil {
+		return err
+	}
+	_, err = f.Write(b)
+	return err
+}
 func (s *Section) Rename(bean *data.Section) error {
 	if n, err := GetEngine().Id(bean.Id).MustCols("name").Update(bean); err != nil {
 		return err
