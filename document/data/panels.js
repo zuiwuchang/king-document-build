@@ -1,0 +1,1 @@
+var __v={"1":{"Id":1,"Chapter":1,"Name":"go","Sort":7},"2":{"Id":2,"Chapter":1,"Name":"go 命令","Sort":6},"3":{"Id":3,"Chapter":1,"Name":"環境配置 win32","Sort":5},"4":{"Id":4,"Chapter":1,"Name":"hellow word","Sort":3},"5":{"Id":5,"Chapter":1,"Name":"交叉編譯","Sort":4},"6":{"Id":6,"Chapter":1,"Name":"排序測試","Sort":2},"7":{"Id":7,"Chapter":2,"Name":"上傳測試","Sort":0}}

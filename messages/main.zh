@@ -16,7 +16,16 @@ app.What=這是孤爲了整理所學開發的一個文檔編輯工具
 app.Search=查找檔案
 app.New=新建檔案
 app.Tags=標籤管理
+
 app.Create Offline=離線檔案
+app.sure? offline=你正在創建離線檔案,這可能會花費一定時間。
+app.Restore DB=恢復數據庫
+app.sure? restore=你正在恢復數據庫,這將覆蓋當前數據庫並且會花費一定時間。
+
+app.current locale=當前語言
+app.locale.change=切換語言
+app.locale.default=瀏覽器默認
+
 
 #tag
 tag.Title=標籤管理
@@ -109,3 +118,6 @@ chapter.edit.erase=你正在刪除段落
 #offline
 offline.title=離線檔案
 offline.ok=檔案創建成功
+
+offline.restore.title=恢復數據庫
+offline.restore.ok=數據庫恢復成功

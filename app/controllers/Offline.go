@@ -17,3 +17,10 @@ func (c Offline) Index() revel.Result {
 	}
 	return c.Render(path)
 }
+func (c Offline) Restore() revel.Result {
+	var mOffline manipulator.Offline
+	if err := mOffline.Restore(); err != nil {
+		return c.RenderError(err)
+	}
+	return c.Render()
+}

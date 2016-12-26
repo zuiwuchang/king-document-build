@@ -2,16 +2,70 @@
 {{template "header.html" .}}
 
 
+<style type="text/css">
+.kLocaleName{
+	display: inline-block;
+}
+</style>
 <div class="container k-view">
 	<div class="jumbotron" id="idDropView">
 	<h1>king document</h1>
 	<p>{{msg . "app.What"}}</p>
+
+	<p>
+		<div class="input-group">
+			<span class="input-group-addon">{{msg . "app.current locale"}}</span>
+			<div class="form-control">{{.currentLocale}}</div>
+			
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{msg . "app.locale.change"}} <span class="caret"></span></button>
+			<ul class="dropdown-menu dropdown-menu-right" role="menu">
+				<li><a class="kLocale" href="#default">{{msg . "app.locale.default"}}</a></li>
+				<li class="divider"></li>
+				<li><a class="kLocale" href="#zh-TW"><div class="kLocaleName">中文</div>(zh-TW)</a></li>
+				<li><a class="kLocale" href="#en"><div class="kLocaleName">English</div>(en)</a></li>
+			</ul>
+			</div>
+		</div>
+	</p>
+
 	<p>
 		<a class="btn btn-default" href="/Search" role="button" target="_blank">{{msg . "app.Search"}}</a>
 		<a class="btn btn-default" href="/Document/New" role="button" target="_blank">{{msg . "app.New"}}</a>
 		<a class="btn btn-default" href="/Tag/Admin" target="_blank" role="button">{{msg . "app.Tags"}}</a>
-		<a class="btn btn-default" href="/Offline/Index" target="_blank" role="button">{{msg . "app.Create Offline"}}</a>
 	</p>
+
+	<p>
+		<a id="idAOffline" class="btn btn-default" href="#" role="button">{{msg . "app.Create Offline"}}</a>
+		<a id="idARestore" class="btn btn-default" href="#" role="button">{{msg . "app.Restore DB"}}</a>
+	</p>
+	
 	</div>
 </div>
 {{template "footer.html" .}}
+
+<script src="/public/js/king-js/cookie/cookie.min.js"></script>
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/msg.js"></script>
+
+	<script src="/public/views/App/Index.js"></script>
+{{else}}
+	<script src="/public/views/msg.min.js"></script>
+
+	<script src="/public/views/App/Index.min.js"></script>
+{{end}}
+<script type="text/javascript">
+$(document).ready(function() {
+	NewContext({
+		Language:{
+			"Sure":{{msg . "Sure"}},
+			"Cancel":{{msg . "Cancel"}},
+
+			"msg warning":{{msg . "msg warning"}},
+			"offline":{{msg . "app.sure? offline"}},
+			"restore":{{msg . "app.sure? restore"}},
+		},
+	});
+});
+</script>
