@@ -233,7 +233,8 @@ var NewContext = function(initObj){
 	//消息 對話框
 	var newModalHtml = function(){
 		var jqBtnShow = $("#idBtnModalHtml");
-		var jqBtnGo = $("#idModalBtnOk");
+		var jqBtnCode = $("#idModalHtmlBtnCode");
+		var jqBtnGo = $("#idModalHtmlBtnOk");
 
 		var jqBody = $("#idModalHtmlBody");
 		var jqVal = $("#idModalHtmlVal");
@@ -242,8 +243,15 @@ var NewContext = function(initObj){
 			val = escapeHtml(val);
 			jqVal.val(val);
 		});
+		jqBtnCode.click(function(event) {
+			var val = jqBody.val();
+			val = escapeHtml(val);
+			jqVal.val("<pre class='prettyprint linenums'>" + val + "</pre>");
+		});
 		return {
 			Show:function(){
+				jqBody.val('');
+				jqVal.val('');
 				jqBtnShow.click();
 
 				setTimeout(function(){
