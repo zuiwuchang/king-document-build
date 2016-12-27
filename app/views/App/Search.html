@@ -57,6 +57,13 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var getText = function(name,rows){
+		if(rows == 0 || rows == "0"){
+			return name;
+		}
+
+		return  name + "&nbsp;&nbsp;&nbsp;&nbsp;[" + rows + "]";
+	};
 	NewContext({
 		Language:{
 			"Sure":{{msg . "Sure"}},
@@ -79,7 +86,7 @@ $(document).ready(function() {
 			{
 				id:'0',
 				parent:'#',
-				text:'{{msg . "tag.TagTree"}}' + "&nbsp;&nbsp;&nbsp;&nbsp;[" + '{{.rows}}' + "]",
+				text:getText('{{msg . "tag.TagTree"}}','{{.rows}}'),
 				state:{
 					opened:true,
 				},
@@ -92,7 +99,7 @@ $(document).ready(function() {
 			{
 				id:'{{.Id}}',
 				parent:'{{.Pid}}',
-				text:'{{.Name}}' + "&nbsp;&nbsp;&nbsp;&nbsp;[" + '{{.Docs}}' + "]",
+				text:getText('{{.Name}}','{{.Docs}}'),
 				data:{
 					Sort:{{.Sort}},
 					Docs:{{.Docs}},
