@@ -1,0 +1,12 @@
+WARN  2016/12/27 13:45:44 Cannot determine git repository version: exit status 128
+ERROR 2016/12/27 13:45:44 go build king-document-build/app/tmp: F:\lib\go\go1.7.3\pkg\tool\windows_amd64\link.exe: chdir .: The system cannot find the file specified.
+
+ERROR 2016/12/27 13:45:44 Failed to parse build errors:
+ go build king-document-build/app/tmp: F:\lib\go\go1.7.3\pkg\tool\windows_amd64\link.exe: chdir .: The system cannot find the file specified.
+
+WARN  2016/12/27 13:47:15 Cannot determine git repository version: exit status 128
+ERROR 2016/12/27 13:47:16 go build king-document-build/app/tmp: F:\lib\go\go1.7.3\pkg\tool\windows_amd64\link.exe: chdir .: The system cannot find the file specified.
+
+ERROR 2016/12/27 13:47:16 Failed to parse build errors:
+ go build king-document-build/app/tmp: F:\lib\go\go1.7.3\pkg\tool\windows_amd64\link.exe: chdir .: The system cannot find the file specified.
+

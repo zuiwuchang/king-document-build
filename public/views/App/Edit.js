@@ -752,6 +752,7 @@ var NewContext = function(initObj){
 				jqHide.toggle("fast");
 				jqShow.toggle("fast");
 			});
+
 			jqTitle.find('.glyphicon-wrench:first').click(function(event) {
 				modalInput.Show(language["input section"],name,function(modal,val){
 					modal.Hide();
@@ -767,14 +768,14 @@ var NewContext = function(initObj){
 			});
 			
 			jqSectionStatus.find('.glyphicon-wrench:first').click(function(event) {
-				if(jqSectionView.is(":visible")){
+				if(jqSectionEdit.is(":visible")){
+					var html = editor.html();
+					newObj.ShowPreview(html);
+				}else{
 					jqSectionView.html('');
 					jqSectionView.hide();
 					jqSectionEdit.show();
 					//editorHeight(editor);
-				}else{
-					var html = editor.html();
-					newObj.ShowPreview(html);
 				}
 			});
 			jqSectionStatus.find('.glyphicon-copyright-mark:first').click(function(event) {
