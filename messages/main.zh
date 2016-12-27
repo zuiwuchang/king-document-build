@@ -108,6 +108,8 @@ chapter.edit.section data ok=ok
 chapter.edit.section data no=未保存
 chapter.edit.input section name=請輸入新的段落名
 
+chapter.edit.escape html=轉換html字符
+
 
 chapter.edit.section.insert code=插入代碼
 chapter.edit.section.input code=請輸入代碼

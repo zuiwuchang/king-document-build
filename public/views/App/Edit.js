@@ -229,6 +229,31 @@ var NewContext = function(initObj){
 		elem.innerHTML = str
 		return elem.innerText || elem.textContent;
 	}
+	//html 轉義 對話框
+	//消息 對話框
+	var newModalHtml = function(){
+		var jqBtnShow = $("#idBtnModalHtml");
+		var jqBtnGo = $("#idModalBtnOk");
+
+		var jqBody = $("#idModalHtmlBody");
+		var jqVal = $("#idModalHtmlVal");
+		jqBtnGo.click(function(event) {
+			var val = jqBody.val();
+			val = escapeHtml(val);
+			jqVal.val(val);
+		});
+		return {
+			Show:function(){
+				jqBtnShow.click();
+
+				setTimeout(function(){
+					jqBody.select().focus();
+				},200);
+			},
+		};
+	};
+	var modalHtml = newModalHtml();
+	//modalHtml.Show();
 
 	//擴展 kindeditor
 	KindEditor.plugin('mycode', function(K) {
@@ -238,7 +263,7 @@ var NewContext = function(initObj){
 		editor.clickToolbar(name, function() {
 			modalTextarea.Show(language["input code"],"",function(modal,val){
 				modal.Hide();
-				val = $.trim(val);
+				//val = $.trim(val);
 				if(val != ""){
 					val = "<pre class='prettyprint linenums'>" + escapeHtml(val) +"</pre>";
 					editor.insertHtml(val);
@@ -532,7 +557,12 @@ var NewContext = function(initObj){
 					"</h4>" + 
 					"<div class='kSectionHide'>" + language["data is hide"] + "</div>" +
 					"<div class='kSectionBody'>" + 
-						"<div class='kSectionViewStatus'><span class='glyphicon glyphicon-wrench kBtnSpan'></span><span class='glyphicon glyphicon-save kBtnSpan'></span><span class='kSectionSaveStatus'>" + language["section ok"] + "</span></div>" +
+						"<div class='kSectionViewStatus'>" + 
+							"<span class='glyphicon glyphicon-wrench kBtnSpan'></span>" +
+							"<span class='glyphicon glyphicon-copyright-mark kBtnSpan'></span>" + 
+							"<span class='glyphicon glyphicon-save kBtnSpan'></span>" +
+							"<span class='kSectionSaveStatus'>" + language["section ok"] + "</span>" + 
+						"</div>" +
 						"<div class='kSectionView'></div>" +
 						"<div class='kSectionEdit'><textarea class='kEditor'></textarea></div>" +
 					"</div>" +
@@ -738,6 +768,9 @@ var NewContext = function(initObj){
 					var html = editor.html();
 					newObj.ShowPreview(html);
 				}
+			});
+			jqSectionStatus.find('.glyphicon-copyright-mark:first').click(function(event) {
+				modalHtml.Show();
 			});
 			jqSectionStatus.find('.glyphicon-save:first').click(function(event) {
 				var html = editor.html();

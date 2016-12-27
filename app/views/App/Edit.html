@@ -126,6 +126,34 @@
 </div>
 </div>
 
+<!--	modal input html	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalHtml" id="idBtnModalHtml" style="display: none;">Open Modal</button>
+
+<div id="idModalHtml" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">{{msg . "chapter.edit.escape html"}}</h4>
+	</div>
+
+	<div class="modal-body">
+		<textarea id="idModalHtmlBody" style="width: 100%;" rows="8"></textarea>
+
+		<textarea id="idModalHtmlVal" readonly="readonly" style="width: 100%;" rows="8"></textarea>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalBtnOk">{{msg . "Sure"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
+
+
 <!--	modal msg	-->
 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalMsg" id="idBtnModalMsg" style="display: none;">Open Modal</button>
 
