@@ -10,3 +10,9 @@ ERROR 2016/12/27 13:47:16 go build king-document-build/app/tmp: F:\lib\go\go1.7.
 ERROR 2016/12/27 13:47:16 Failed to parse build errors:
  go build king-document-build/app/tmp: F:\lib\go\go1.7.3\pkg\tool\windows_amd64\link.exe: chdir .: The system cannot find the file specified.
 
+ERROR 2016/12/29 09:55:21 ../program/project/go/src/king-document-build/vendor/modules/db/manipulator/db.go:8:2: cannot find package "github.com/mattn/go-sqlite3" in any of:
+	/home/king/program/project/go/src/king-document-build/vendor/github.com/mattn/go-sqlite3 (vendor tree)
+	/opt/go/src/github.com/mattn/go-sqlite3 (from $GOROOT)
+	/home/king/program/lib/go/src/github.com/mattn/go-sqlite3 (from $GOPATH)
+	/home/king/program/project/go/src/github.com/mattn/go-sqlite3
+
