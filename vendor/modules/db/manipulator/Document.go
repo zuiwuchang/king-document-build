@@ -64,7 +64,6 @@ func (d *Document) Modify(bean *data.Document) error {
 		}
 	}()
 
-	//tag --
 	var doc data.Document
 	var has bool
 	if has, err = session.Id(bean.Id).Cols("tag").Get(&doc); err != nil {
@@ -73,35 +72,39 @@ func (d *Document) Modify(bean *data.Document) error {
 		err = fmt.Errorf("document id not found (%v)", bean.Id)
 		return err
 	}
-	if doc.Tag != bean.Tag && doc.Tag != 0 {
-		var tag data.Tag
-		id := doc.Tag
-		if has, err = session.Id(id).Cols("docs").Get(&tag); err != nil {
-			return err
-		} else if !has {
-			err = fmt.Errorf("tag id not found (%v)", id)
-			return err
+	if doc.Tag != bean.Tag {
+		//tag --
+		if doc.Tag != 0 {
+			var tag data.Tag
+			id := doc.Tag
+			if has, err = session.Id(id).Cols("docs").Get(&tag); err != nil {
+				return err
+			} else if !has {
+				err = fmt.Errorf("tag id not found (%v)", id)
+				return err
+			}
+			if tag.Docs > 0 {
+				tag.Docs--
+			}
+			if _, err = session.Id(id).MustCols("docs").Update(&tag); err != nil {
+				return err
+			}
 		}
-		if tag.Docs > 0 {
-			tag.Docs--
-		}
-		if _, err = session.Id(id).MustCols("docs").Update(&tag); err != nil {
-			return err
-		}
-	}
-	//tag ++
-	if bean.Tag != 0 {
-		var tag data.Tag
-		id := bean.Tag
-		if has, err = session.Id(id).Cols("docs").Get(&tag); err != nil {
-			return err
-		} else if !has {
-			err = fmt.Errorf("tag id not found (%v)", id)
-			return err
-		}
-		tag.Docs++
-		if _, err = session.Id(id).MustCols("docs").Update(&tag); err != nil {
-			return err
+
+		//tag ++
+		if bean.Tag != 0 {
+			var tag data.Tag
+			id := bean.Tag
+			if has, err = session.Id(id).Cols("docs").Get(&tag); err != nil {
+				return err
+			} else if !has {
+				err = fmt.Errorf("tag id not found (%v)", id)
+				return err
+			}
+			tag.Docs++
+			if _, err = session.Id(id).MustCols("docs").Update(&tag); err != nil {
+				return err
+			}
 		}
 	}
 
