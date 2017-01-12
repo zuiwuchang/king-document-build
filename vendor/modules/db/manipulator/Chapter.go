@@ -14,7 +14,7 @@ func (c *Chapter) Get(bean *data.Chapter) (bool, error) {
 	return GetEngine().Get(bean)
 }
 func (c *Chapter) FindByDoc(id int64, beans *[]data.Chapter) error {
-	return GetEngine().Where("doc = ?", id).Find(beans)
+	return GetEngine().Where("doc = ?", id).OrderBy("sort").Find(beans)
 }
 func (c *Chapter) New(bean *data.Chapter) error {
 	session := NewSession()
