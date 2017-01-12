@@ -57,6 +57,7 @@ func (o *Offline) Create(str string) error {
 	return nil
 }
 func (o *Offline) writeTar(tw *tar.Writer, name string, v interface{}) error {
+	//b, err := json.Marshal(v)
 	b, err := json.MarshalIndent(v, "	", "	")
 	if err != nil {
 		return err
