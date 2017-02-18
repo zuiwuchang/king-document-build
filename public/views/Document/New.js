@@ -54,7 +54,18 @@ var NewContext = function(initObj){
 			}
 			jqValTag.val(tag);
 			jqShowTag.text(tree.get_text(node));
-		});
+		}).on("select_node.jstree",function(e,obj){
+			var tree = $(this).jstree(true);
+
+			var node = obj.node;
+			if(!tree.is_leaf(node) && tree.is_closed(node)){
+				tree.open_node(node);
+			}
+
+			if(node.data.Docs != 0){
+				onSearch(tree,node);
+			}
+		}).off("keydown");
 		jqShowTag.click(function(event) {
 			jqBtn.click();
 		});
