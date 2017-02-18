@@ -40,6 +40,10 @@ func (c *Chapter) New(bean *data.Chapter) error {
 		return err
 	}
 
+	var max data.Chapter
+	session.Select("max(sort) as sort").Get(&max)
+	bean.Sort = max.Sort + 1
+
 	_, err = session.InsertOne(bean)
 	return nil
 }

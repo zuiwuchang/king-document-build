@@ -168,6 +168,7 @@ var NewChapter = function(initObj){
 						id:result.Value,
 						parent:ROOT_ID,
 						text:name,
+						data:parseInt(result.Str),
 					});
 					tree.edit(newNode);
 				}else{

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/revel/revel"
 	"king-document-build/app/modules/ajax"
 	"king-document-build/app/modules/db/data"
@@ -53,6 +54,7 @@ func (c Chapter) AjaxNew(name string, doc int64) revel.Result {
 	bean := data.Chapter{Name: name, Doc: doc}
 	if err := mChapter.New(&bean); err == nil {
 		result.Value = bean.Id
+		result.Str = fmt.Sprint(bean.Sort)
 	} else {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
