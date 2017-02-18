@@ -365,8 +365,6 @@ var NewContext = function(initObj){
 								return;
 							}
 							var id = node.id;
-							var sort = node.children.length;
-
 
 							enable(false);
 							tree.set_icon(node,icon);
@@ -379,7 +377,6 @@ var NewContext = function(initObj){
 								data: {
 									pid:id,
 									name:name,
-									sort:sort,
 								},
 							})
 							.done(function(result) {
@@ -388,7 +385,7 @@ var NewContext = function(initObj){
 										id:result.Value,
 										parent:id,
 										text:name,
-										data:sort,
+										data:parseInt(result.Str),
 									});
 									tree.edit(newNode);
 								}else{
@@ -513,6 +510,13 @@ var NewContext = function(initObj){
 			},
 		}).on("ready.jstree",function(){
 			$(this).show();
+		}).on("select_node.jstree",function(e,obj){
+			var tree = $(this).jstree(true);
+
+			var node = obj.node;
+			if(!tree.is_leaf(node) && tree.is_closed(node)){
+				tree.open_node(node);
+			}
 		}).on("rename_node.jstree",function(e,obj){
 			var tree = $(this).jstree(true);
 

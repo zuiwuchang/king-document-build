@@ -40,6 +40,10 @@ func (t *Tag) New(bean *data.Tag) error {
 		}
 	}
 
+	var max data.Tag
+	session.Select("max(sort) as sort").Where("pid=?", pid).Get(&max)
+	bean.Sort = max.Sort + 1
+
 	_, err = session.InsertOne(bean)
 	return err
 }

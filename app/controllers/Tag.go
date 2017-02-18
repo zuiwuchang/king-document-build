@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/revel/revel"
 	"king-document-build/app/modules/ajax"
 	"king-document-build/app/modules/db/data"
@@ -21,14 +22,15 @@ func (c Tag) Admin() revel.Result {
 	}
 	return c.Render(tags)
 }
-func (c Tag) AjaxCreate(pid, sort int64, name string) revel.Result {
+func (c Tag) AjaxCreate(pid int64, name string) revel.Result {
 	var result ajax.Result
 
-	tag := data.Tag{Pid: pid, Sort: sort, Name: name}
+	tag := data.Tag{Pid: pid, Name: name}
 	var mTag manipulator.Tag
 	err := mTag.New(&tag)
 	if err == nil {
 		result.Value = tag.Id
+		result.Str = fmt.Sprint(tag.Sort)
 	} else {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()

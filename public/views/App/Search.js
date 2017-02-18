@@ -116,7 +116,18 @@ var NewContext = function(initObj){
 		}).on("ready.jstree",function(){
 			$(this).show();
 			tree = $(this).jstree(true);
-		});
+		}).on("select_node.jstree",function(e,obj){
+			var tree = $(this).jstree(true);
+
+			var node = obj.node;
+			if(!tree.is_leaf(node) && tree.is_closed(node)){
+				tree.open_node(node);
+			}
+
+			if(node.data.Docs != 0){
+				onSearch(tree,node);
+			}
+		}).off("keydown");
 
 		return {
 			Bind:function(name,callback){
@@ -200,11 +211,13 @@ var NewContext = function(initObj){
 	};
 	var docsView = newDocsView();
 
+	var lastSearchId = null;
 	mytree.Bind("search",function(tree,node){
-		if(!isEnable()){
+		if(!isEnable() || lastSearchId == node.id){
 			return;
 		}
 		enable(false);
+		lastSearchId = node.id;
 		tree.set_icon(node,ICON_WAIT);
 		$.ajax({
 			url: '/Tag/AjaxGetDocs',
