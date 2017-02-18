@@ -3,9 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/revel/revel"
-	"modules/ajax"
-	"modules/db/data"
-	"modules/db/manipulator"
+	"king-document-build/app/modules/ajax"
+	"king-document-build/app/modules/db/data"
+	"king-document-build/app/modules/db/manipulator"
 )
 
 type Tag struct {

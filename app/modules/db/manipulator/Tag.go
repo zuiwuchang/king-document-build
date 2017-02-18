@@ -2,7 +2,7 @@ package manipulator
 
 import (
 	"fmt"
-	"modules/db/data"
+	"king-document-build/app/modules/db/data"
 )
 
 type Tag struct {

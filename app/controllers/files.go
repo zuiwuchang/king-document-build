@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"github.com/revel/revel"
-	"modules/db/data"
-	"modules/db/manipulator"
+	"king-document-build/app/modules/db/data"
+	"king-document-build/app/modules/db/manipulator"
 )
 
 type Files struct {

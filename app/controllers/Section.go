@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/revel/revel"
-	"modules/ajax"
-	"modules/db/data"
-	"modules/db/manipulator"
+	"king-document-build/app/modules/ajax"
+	"king-document-build/app/modules/db/data"
+	"king-document-build/app/modules/db/manipulator"
 	"strconv"
 	"strings"
 )

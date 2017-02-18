@@ -3,7 +3,7 @@ package manipulator
 import (
 	"fmt"
 	"github.com/go-xorm/xorm"
-	"modules/db/data"
+	"king-document-build/app/modules/db/data"
 	"os"
 )
 

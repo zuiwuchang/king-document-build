@@ -3,7 +3,7 @@ package manipulator
 import (
 	"fmt"
 	"io"
-	"modules/db/data"
+	"king-document-build/app/modules/db/data"
 	"os"
 	"path"
 	"sort"

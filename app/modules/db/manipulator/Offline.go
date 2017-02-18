@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/go-xorm/xorm"
 	"io/ioutil"
-	"modules/db/data"
+	"king-document-build/app/modules/db/data"
 	"os"
 )
 

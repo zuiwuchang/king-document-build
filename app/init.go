@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/revel/revel"
-	"modules/db/manipulator"
+	"king-document-build/app/modules/db/manipulator"
 )
 
 func init() {

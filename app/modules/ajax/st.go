@@ -1,7 +1,7 @@
 package ajax
 
 import (
-	"modules/db/data"
+	"king-document-build/app/modules/db/data"
 )
 
 const (

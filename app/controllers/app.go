@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/revel/revel"
-	"modules/db/data"
-	"modules/db/manipulator"
+	"king-document-build/app/modules/db/data"
+	"king-document-build/app/modules/db/manipulator"
 )
 
 type App struct {

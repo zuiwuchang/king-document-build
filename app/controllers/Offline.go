@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/revel/revel"
-	"modules/db/manipulator"
+	"king-document-build/app/modules/db/manipulator"
 )
 
 type Offline struct {
