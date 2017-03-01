@@ -263,6 +263,8 @@ var NewContext = function(initObj){
 	var modalHtml = newModalHtml();
 	//modalHtml.Show();
 
+	var K = initObj.K;
+	/*
 	//擴展 kindeditor
 	KindEditor.plugin('mycode', function(K) {
 		var editor = this;
@@ -282,6 +284,7 @@ var NewContext = function(initObj){
 	KindEditor.lang({
 		mycode:language["insert code"],
 	});
+	*/
 
 	//top list
 	var newPanelList = function(){
@@ -567,12 +570,16 @@ var NewContext = function(initObj){
 					"<div class='kSectionBody'>" + 
 						"<div class='kSectionViewStatus'>" + 
 							"<span class='glyphicon glyphicon-wrench kBtnSpan'></span>" +
-							"<span class='glyphicon glyphicon-copyright-mark kBtnSpan'></span>" + 
 							"<span class='glyphicon glyphicon-save kBtnSpan'></span>" +
 							"<span class='kSectionSaveStatus'>" + language["section ok"] + "</span>" + 
+							"<br>" +
+							"<span class='glyphicon glyphicon-registration-mark kBtnSpan'></span>" + 
+							"<span class='glyphicon glyphicon-copyright-mark kBtnSpan'></span>" + 
+							"<span class='glyphicon glyphicon-picture kBtnSpan'></span>" +
+							"<span class='glyphicon glyphicon-file kBtnSpan'></span>" +
 						"</div>" +
 						"<div class='kSectionView'></div>" +
-						"<div class='kSectionEdit'><textarea class='kEditor'></textarea></div>" +
+						"<div class='kSectionEdit'><textarea class='kEditor' wrap='off'></textarea></div>" +
 					"</div>" +
 				"</div>";
 
@@ -636,53 +643,30 @@ var NewContext = function(initObj){
 			if(oldVal || oldVal == ""){
 				jqText.val(oldVal);
 			}
-			var editorHeight = function(editor){
-				 var autoheight = editor.edit.doc.body.scrollHeight;
-				 if(autoheight < 100){
-				 	return;
-				 }
-				editor.edit.setHeight(autoheight);
-			};
-			var editor = KindEditor.create(jqText, {
+			
+			var kEditor = K.editor({ 
 				uploadJson : '/Files/Upload?id=' + id,
 				fileManagerJson : '/Files/Find?id=' + id,
-				allowFileManager : true,
-				urlType:"relative",
-
-				resizeType:1,
-				width:'100%',
-				height:400,
-				items:[
-					'source', 
-					'|', 'undo', 'redo', /*'|', 'preview', 'print', 'template',*/ 
-					'|', 'mycode', 
-					'|', 'cut','copy', 'paste',
-					'plainpaste', /*'wordpaste',*/
-					'|', 'justifyleft', 'justifycenter', 'justifyright',
-					'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-					'superscript', 'clearhtml', /*'quickformat',*/ 'selectall', 
-					'|', 'fullscreen',
-					'/',
-					/*'formatblock', 'fontname', 'fontsize', 
-					'|', 'forecolor', 'hilitecolor',*/ 'bold',
-					'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', 
-					'|', 'image',/* 'multiimage','flash', 'media',*/ 'insertfile', 'table', /*'hr', 'emoticons', 'baidumap', 'pagebreak',
-					'anchor',*/ 'link', 'unlink', /*'|', 'about'*/,
-				],
-				afterCreate:function(){
-					newObj._isCreate = true;
-				},
-				afterChange:function(){
-					if(!newObj._isCreate){
-						return;
-					}
-					var html = this.html();
-					newObj.UpdateStatus(html);
-
-					//editorHeight(this);
-				},
+				allowFileManager : true ,
+			}); 
+			var editor = (function(){
+				return {
+					html:function(){
+						return jqText.val();
+					},
+					push:function(html){
+						jqText.val(jqText.val() + html);
+					},
+				};
+			})();
+			jqText.keyup(function(event) {
+				var html = editor.html();
+				newObj.UpdateStatus(html);
+			}).change(function(event) {
+				var html = editor.html();
+				newObj.UpdateStatus(html);
 			});
-			editor._k_ctx = newObj;
+			
 			if(oldVal || oldVal == ""){
 				newObj.ShowPreview(oldVal);
 			}else{
@@ -778,12 +762,57 @@ var NewContext = function(initObj){
 					//editorHeight(editor);
 				}
 			});
-			jqSectionStatus.find('.glyphicon-copyright-mark:first').click(function(event) {
+			jqSectionStatus.find('.glyphicon-registration-mark:first').click(function(event) {
 				modalHtml.Show();
+			});
+			jqSectionStatus.find('.glyphicon-copyright-mark:first').click(function(event) {
+				modalTextarea.Show(language["input code"],"",function(modal,val){
+				modal.Hide();
+				//val = $.trim(val);
+				if(val != ""){
+					val = "\n<pre class='prettyprint linenums'>" + escapeHtml(val) +"</pre>";
+					editor.push(val);
+
+					html = editor.html();
+					jqSectionView.html(html);
+					newObj.UpdateStatus(html);
+				}
+			});
 			});
 			jqSectionStatus.find('.glyphicon-save:first').click(function(event) {
 				var html = editor.html();
 				newObj.Save(html);
+			});
+			jqSectionStatus.find('.glyphicon-picture:first').click(function(event) {
+				kEditor.loadPlugin('image', function() {
+					kEditor.plugin.imageDialog({
+						clickFn:function(url, title, width, height, border, align) {  
+
+							var html = "\n<img src='" + url + "'>";
+							editor.push(html);
+							kEditor.hideDialog();  
+
+							html = editor.html();
+							jqSectionView.html(html);
+							newObj.UpdateStatus(html);
+						},
+					});
+				});
+			});
+			jqSectionStatus.find('.glyphicon-file:first').click(function(event) {
+				kEditor.loadPlugin('insertfile', function() {
+					kEditor.plugin.fileDialog({
+						clickFn:function(url, title) { 
+							var html = "\n<a href='" + url + "' target='_blank'>" + title + "</a>";
+							editor.push(html);
+							kEditor.hideDialog();
+							
+							html = editor.html();
+							jqSectionView.html(html);
+							newObj.UpdateStatus(html);
+						},
+					});
+				});
 			});
 		};
 		//init
