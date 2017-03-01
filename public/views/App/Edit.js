@@ -578,7 +578,7 @@ var NewContext = function(initObj){
 							"<span class='glyphicon glyphicon-picture kBtnSpan'></span>" +
 							"<span class='glyphicon glyphicon-file kBtnSpan'></span>" +
 						"</div>" +
-						"<div class='kSectionView'></div>" +
+						"<div class='kSectionView' style='display:none;'></div>" +
 						"<div class='kSectionEdit'><textarea class='kEditor' wrap='off'></textarea></div>" +
 					"</div>" +
 				"</div>";
@@ -776,6 +776,7 @@ var NewContext = function(initObj){
 					html = editor.html();
 					jqSectionView.html(html);
 					newObj.UpdateStatus(html);
+					prettyPrint();
 				}
 			});
 			});
