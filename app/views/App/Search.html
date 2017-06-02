@@ -10,6 +10,10 @@
 	padding-right: 5px;
 	cursor: pointer;
 }
+#kBtnIconSort{
+	padding-right: 5px;
+	cursor: pointer;
+}
 </style>
 
 <div class="container k-view">
@@ -23,7 +27,11 @@
 </div>
 
 <div class="panel panel-default">
-	<div class="panel-heading"><span class="glyphicon glyphicon-minus" id="kBtnIcon"></span>{{msg . "search.result"}}</div>
+	<div class="panel-heading">
+	<span class="glyphicon glyphicon-minus" id="kBtnIcon"></span>
+	<span class="glyphicon glyphicon-sort-by-alphabet" id="kBtnIconSort"></span>{{msg . "search.result"}}
+
+	</div>
 
 	<div class="panel-body">
 		<div id="idDocsHide" style="display: none;">
@@ -37,6 +45,32 @@
 
 </div>
 
+<!--	modal sort	-->
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#idModalSort" id="idBtnSort" style="display: none;">Open Modal</button>
+
+<div id="idModalSort" class="modal fade" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+	<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	<h4 class="modal-title">{{msg . "chapter.edit.modal sort"}}</h4>
+	</div>
+
+	<div class="modal-body">
+		<ul class='list-group' id="idModalSortBody">
+		</ul>
+	</div>
+
+	<div class="modal-footer">
+	<button type="button" class="btn btn-default" id="idModalSortSure">{{msg . "Sure"}}</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal" id="idModalSortCancel">{{msg . "Cancel"}}</button>
+	</div>
+</div>
+
+</div>
+</div>
 
 {{template "footer.html" .}}
 

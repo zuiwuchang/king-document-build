@@ -126,7 +126,7 @@ func (o *Offline) createTags(session *xorm.Session, tw *tar.Writer) error {
 }
 func (o *Offline) createTag(session *xorm.Session, tw *tar.Writer, tag int64) error {
 	var docs []data.Document
-	err := session.Where("tag = ?", tag).Find(&docs)
+	err := session.OrderBy("sort").Where("tag = ?", tag).Find(&docs)
 	if err != nil {
 		return err
 	}

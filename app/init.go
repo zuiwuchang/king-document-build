@@ -16,10 +16,19 @@ func init() {
 		revel.FlashFilter,             // Restore and write the flash cookie.
 		revel.ValidationFilter,        // Restore kept validation errors and save new ones from cookie.
 		revel.I18nFilter,              // Resolve the requested language
-		HeaderFilter,                  // Add some security based headers
-		revel.InterceptorFilter,       // Run interceptors around the action.
-		revel.CompressFilter,          // Compress the result.
-		revel.ActionInvoker,           // Invoke the action.
+		func(c *revel.Controller, fc []revel.Filter) {
+			locale := c.RenderArgs[revel.CurrentLocaleRenderArg]
+			if locale != "zh-TW" &&
+				locale != "en" {
+				c.Request.Locale = "zh-TW"
+				c.RenderArgs[revel.CurrentLocaleRenderArg] = "zh-TW"
+			}
+			fc[0](c, fc[1:])
+		},
+		HeaderFilter,            // Add some security based headers
+		revel.InterceptorFilter, // Run interceptors around the action.
+		revel.CompressFilter,    // Compress the result.
+		revel.ActionInvoker,     // Invoke the action.
 	}
 
 	// register startup functions with OnAppStart

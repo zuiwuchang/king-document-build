@@ -50,6 +50,59 @@ var NewContext = function(initObj){
 		});
 		return newObj;
 	};
+	//排序框
+	//子節點 排序框
+	var newModalSort = function(){
+		var jqBtn = $("#idBtnSort");
+		var jqBody = $("#idModalSortBody");
+		jqBody.sortable().disableSelection();
+
+		var jqSure = $("#idModalSortSure");
+		var jqCancel = $("#idModalSortCancel");
+		var onOk = null;
+		var oldArrs = null;
+		jqSure.click(function(event) {
+			jqCancel.click();
+			if(!onOk){
+				return;
+			}
+
+			var newArrs = [];
+			var modify = false;
+			jqBody.children('li').each(function(index, el) {
+				var id = $(el).data('id');
+
+				newArrs.push(id);
+
+				if(!modify && id != oldArrs[index].Id){
+					modify = true;
+				}
+			});
+
+			if(modify){
+				onOk(newArrs);
+			}
+		});
+		return {
+			Show:function(arrs,callback){
+				oldArrs = arrs;
+				onOk = callback;
+
+				var html = "";
+				for (var i = 0; i < arrs.length; i++) {
+					var node = arrs[i];
+					html += "<li class='list-group-item' data-id='" + 
+						node.Id + "'>" + 
+						node.Name + "</li>";
+				}
+
+				jqBody.html(html);
+				jqBtn.click();
+			},
+		}
+	};
+	var modalSort = newModalSort();
+
 	var msgid = 1;
 	//var modal = newMsg(msgid++);
 	var modal = newMsg(msgid++);
@@ -144,17 +197,33 @@ var NewContext = function(initObj){
 
 	var jqView = $("#idDocsView");
 	var newDocsView = function(){
+		var _items = [];
+		var _last = 0;
+		var _mytree;
+		var _node;
+		var _map;
 		return {
 			Update:function(arrs,mytree,node){
+				_last++;
+				_items = [];
+				_mytree = mytree;
+				_node = node;
+				_map = {};
 				if(!arrs){
 					jqView.html(language["none data"]);
 					return;
 				}
 				var items = [];
 				var map = {};
+				_map = map;
 				for (var i = 0; i < arrs.length; i++) {
 					var data= arrs[i];
 					var id = data.Id;
+					_items.push({
+						Id:data.Id,
+						Name:data.Name,
+					})
+
 					map[id] = data;					
 					items.push("<p id='k-view-" + id + "'>" + 
 							"<span class='glyphicon glyphicon-wrench kBtnSpan' data-id='" + id + "'></span>" +
@@ -207,6 +276,46 @@ var NewContext = function(initObj){
 				});
 				
 			},
+			Sort:function(){
+				if(_items.length== 0){
+					return;
+				}
+				var ctx = this;
+				modalSort.Show(_items,function(arrs){
+					var last = _last;
+					//update
+					var updateSort = function(){
+						if(last == _last){
+							var newArrs = [];
+							for (var i = 0; i < arrs.length; i++) {
+								var id = arrs[i]
+								newArrs.push(_map[id]);
+							}
+							ctx.Update(newArrs,_mytree,_node);
+						}
+					}
+					//ajax
+					var sort = arrs.join("-");
+					$.ajax({
+						url: '/Document/AjaxSort',
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							sort:sort,
+						},
+					})
+					.done(function(result) {
+						if(0 == result.Code){
+							updateSort();	
+						}else{
+							modalError.Show(language["err.title"],result.Emsg);
+						}
+					})
+					.fail(function() {
+						modalError.Show(language["err.title"],language["err net"]);
+					});
+				});
+			},
 		};
 	};
 	var docsView = newDocsView();
@@ -245,5 +354,8 @@ var NewContext = function(initObj){
 	$("#kBtnIcon").click(function(event) {
 		jqView.toggle("fast");
 		jqViewHide.toggle("fast");
+	});
+	$("#kBtnIconSort").click(function(event) {
+		docsView.Sort();
 	});
 };

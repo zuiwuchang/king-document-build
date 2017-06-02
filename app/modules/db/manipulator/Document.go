@@ -31,6 +31,8 @@ func (d *Document) New(bean *data.Document) error {
 			return err
 		}
 	}
+	bean.Sort, _ = session.Count(data.Document{Tag: bean.Tag})
+
 	if _, err = session.InsertOne(bean); err != nil {
 		return err
 	}
@@ -118,7 +120,7 @@ func (d *Document) Count(tag int64) (int64, error) {
 }
 
 func (d *Document) FindByTag(tag int64, beans *[]data.Document) error {
-	return GetEngine().Where("tag = ?", tag).Find(beans)
+	return GetEngine().OrderBy("sort").Where("tag = ?", tag).Find(beans)
 }
 func (d *Document) Remove3(session *xorm.Session, id int64, strs *[]string) error {
 	var chapters []data.Chapter
@@ -176,4 +178,29 @@ func (d *Document) Remove(id int64) error {
 	}()
 	err = d.Remove3(session, id, &strs)
 	return err
+}
+func (d *Document) Sort(ids []int64) error {
+	session := NewSession()
+	defer session.Close()
+	err := session.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err == nil {
+			session.Commit()
+		} else {
+			session.Rollback()
+		}
+	}()
+
+	n := int64(0)
+	for _, id := range ids {
+		if _, err = session.Id(id).Cols("sort").Update(data.Document{Sort: n}); err != nil {
+			return err
+		}
+		n++
+	}
+
+	return nil
 }

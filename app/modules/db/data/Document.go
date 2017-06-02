@@ -9,6 +9,9 @@ type Document struct {
 
 	//檔案名
 	Name string
+
+	//檔案 顯示 順序
+	Sort int64
 }
 
 //檔案 章節

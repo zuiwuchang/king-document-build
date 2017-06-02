@@ -7,6 +7,7 @@ import (
 	"king-document-build/app/modules/db/data"
 	"king-document-build/app/modules/db/manipulator"
 	"strconv"
+	"strings"
 )
 
 type Document struct {
@@ -124,6 +125,42 @@ func (c Document) AjaxRemove(id int64) revel.Result {
 	}
 	var mDocument manipulator.Document
 	if err := mDocument.Remove(id); err != nil {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = err.Error()
+		return c.RenderJson(result)
+	}
+
+	return c.RenderJson(result)
+}
+func (c Document) AjaxSort(sort string) revel.Result {
+	var result ajax.Result
+
+	strs := strings.Split(sort, "-")
+	ids := make([]int64, 0, len(strs))
+	for _, str := range strs {
+		str := strings.TrimSpace(str)
+		if str == "" {
+			continue
+		}
+		if id, err := strconv.ParseInt(str, 10, 64); err != nil {
+			result.Code = ajax.CODE_ERROR
+			result.Emsg = err.Error()
+			return c.RenderJson(result)
+		} else if id == 0 {
+			result.Code = ajax.CODE_ERROR
+			result.Emsg = "document id not found (0)"
+			return c.RenderJson(result)
+		} else {
+			ids = append(ids, id)
+		}
+	}
+	if len(ids) == 0 {
+		result.Code = ajax.CODE_ERROR
+		result.Emsg = "document sort cann't be empty"
+		return c.RenderJson(result)
+	}
+	var mDocument manipulator.Document
+	if err := mDocument.Sort(ids); err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 		return c.RenderJson(result)
