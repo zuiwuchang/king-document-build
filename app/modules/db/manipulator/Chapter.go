@@ -18,7 +18,7 @@ func (c *Chapter) FindByDoc(id int64, beans *[]data.Chapter) error {
 }
 func (c *Chapter) New(bean *data.Chapter) error {
 	session := NewSession()
-	defer session.Clone()
+	defer session.Close()
 
 	var err error
 	if err = session.Begin(); err != nil {

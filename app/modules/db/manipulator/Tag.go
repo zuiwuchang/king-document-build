@@ -15,7 +15,7 @@ func (t *Tag) Find(beans *[]data.Tag) error {
 }
 func (t *Tag) New(bean *data.Tag) error {
 	session := NewSession()
-	defer session.Clone()
+	defer session.Close()
 
 	var err error
 	if err = session.Begin(); err != nil {

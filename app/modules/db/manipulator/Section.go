@@ -15,7 +15,7 @@ type Section struct {
 
 func (s *Section) New(bean *data.Section) error {
 	session := NewSession()
-	defer session.Clone()
+	defer session.Close()
 
 	var err error
 	if err = session.Begin(); err != nil {

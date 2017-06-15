@@ -12,7 +12,7 @@ type Panel struct {
 
 func (p *Panel) New(bean *data.Panel) error {
 	session := NewSession()
-	defer session.Clone()
+	defer session.Close()
 
 	var err error
 	if err = session.Begin(); err != nil {
