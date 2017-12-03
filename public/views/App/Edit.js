@@ -3,6 +3,43 @@ var NewContext = function(initObj){
 	var language = initObj.Language;
 	var mainTitleName = "king document build";
 
+	//key bar
+	var KeyBars = [
+		{
+			"bar":"bar",
+			"tab":"	",
+		},	
+		{
+			"pre":"<pre class='k-pre'>XXXXXX</pre>",
+			"pre-l":"<pre class='k-pre'>",
+			"pre-r":"</pre>",
+		},
+		{
+			"strong":"<strong>XXXXXX</strong>",
+			"strong-l":"<strong>",
+			"strong-r":"</strong>",
+		},
+		{
+			"ol":"<ol>XXXXXX</ol>",
+			"ul":"<ul>XXXXXX</ul>",
+			"li":"<li>XXXXXX</li>",
+		},
+		{
+			"div":"<div>XXXXXX</div>",
+			"p":"<p>XXXXXX</p>",
+			"span":"<span>XXXXXX</span>",
+			"a":"<a href='XXXXXX' target='_blank'>XXXXXX</a>",
+		},
+	];
+	var KeyBar = {
+	};
+	for (var i = 0; i < KeyBars.length; i++) {
+		var keys = KeyBars[i];
+		for(var key in keys){
+			KeyBar[key] = keys[key];
+		}
+	}
+
 	//排序框
 	//子節點 排序框
 	var newModalSort = function(){
@@ -559,7 +596,8 @@ var NewContext = function(initObj){
 			_sections.push(sectionInfo);
 			var sectionId= "king-section-" + id;
 			var jqView = jqBodyView;
-			var html = "<div id='" + sectionId + "'>" +
+			var html = [];
+			html.push("<div id='" + sectionId + "'>" +
 					"<h4 class='kSectionTitle'>" +
 						"<span class='glyphicon glyphicon-minus kBtnSpan'></span>" + 
 						"<span class='glyphicon glyphicon-wrench kBtnSpan'></span>" + 
@@ -577,13 +615,30 @@ var NewContext = function(initObj){
 							"<span class='glyphicon glyphicon-copyright-mark kBtnSpan'></span>" + 
 							"<span class='glyphicon glyphicon-picture kBtnSpan'></span>" +
 							"<span class='glyphicon glyphicon-file kBtnSpan'></span>" +
+							"&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-collapse-down kBtnSpan'></span>" +
+							"<div class='KKeySidebarView'><table class='table'>");
+							for (var i = 0; i < KeyBars.length; i++) {
+								
+								html.push("<tr>");
+							
+								var keys = KeyBars[i];
+								for(var key in keys){
+									if(key == "bar"){
+										html.push("<td><a href='#" + key + "' class='glyphicon glyphicon-minus-sign'></a></td>");
+									}else{
+										html.push("<td><a href='#" + key + "'>" + key + "</a></td>");
+									}
+								}
+								html.push("</tr>");
+							}
+							html.push("</table></div>" +
 						"</div>" +
 						"<div class='kSectionView' style='display:none;'></div>" +
 						"<div class='kSectionEdit'><textarea class='kEditor' wrap='off'></textarea></div>" +
 					"</div>" +
-				"</div>";
+				"</div>");
 
-			var jq = $(html);
+			var jq = $(html.join(""));
 			var jqTitle = jq.find('.kSectionTitle:first');
 			var jqName = jqTitle.find('.kTitleName:first');
 
@@ -656,6 +711,16 @@ var NewContext = function(initObj){
 					},
 					push:function(html){
 						jqText.val(jqText.val() + html);
+						jqText.focus();
+					},
+					insert:function(str){
+						var doc = jqText.get()[0];
+						var start = doc.selectionStart;
+						var end = doc.selectionEnd;
+						var val = doc.value;
+						doc.value = val.substring(0,start) + str + val.substring(end,val.length);
+						doc.selectionStart = doc.selectionEnd = str.length + start;
+						jqText.focus();
 					},
 				};
 			})();
@@ -814,6 +879,51 @@ var NewContext = function(initObj){
 						},
 					});
 				});
+			});
+			var jqKeyBar = jqSectionStatus.find('.glyphicon-collapse-down:first');
+			var jqBarView = jqSectionStatus.find('.KKeySidebarView:first');
+			jqKeyBar.click(function(event) {
+				if(jqBarView.is(':visible')){
+					jqBarView.hide('fast');
+					jqKeyBar.attr('class', 'glyphicon glyphicon-collapse-down kBtnSpan');
+				}else{
+					jqBarView.show('fast');
+					jqKeyBar.attr('class', 'glyphicon glyphicon-collapse-up kBtnSpan');
+				}
+			});
+			var insertVal = function(val){
+				if(!val){
+					return;
+				}
+				editor.insert(val);
+				var html = editor.html();
+				jqSectionView.html(html);
+				newObj.UpdateStatus(html);
+			};
+			var _barNo = true;
+			jqSectionStatus.find('a').click(function(event) {
+				var cmd = $(this).attr('href');
+				cmd = cmd.substring(1);
+				if(cmd=="bar"){
+					if(_barNo){
+						_barNo = false;
+						$(this).attr('class', 'glyphicon glyphicon-plus-sign');
+					}else{
+						_barNo = true;
+						$(this).attr('class', 'glyphicon glyphicon-minus-sign');
+					}
+
+					return false;
+				}
+				var val = KeyBar[cmd];
+				if(val){
+					insertVal(val)
+					if(_barNo){
+						jqBarView.hide('fast');
+						jqKeyBar.attr('class', 'glyphicon glyphicon-collapse-down kBtnSpan');
+					}
+				}
+				return false;
 			});
 		};
 		//init

@@ -21,6 +21,19 @@
 .kModalMsg{
 	display: none;
 }
+.kSectionViewStatus{
+	position:relative;
+}
+.KKeySidebarView{
+	display: none;
+	padding: 9px;
+	position: absolute;
+	border-radius: 6px;
+}
+.KKeySidebarView a{
+	padding-left: 3px;
+	padding-right: 3px;
+}
 </style>
 
 <div class="container k-view">
@@ -220,7 +233,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-KindEditor.ready(function(K) {	
+KindEditor.ready(function(K) {
 	var ctx = NewContext({
 		K:K,
 		Language:{
