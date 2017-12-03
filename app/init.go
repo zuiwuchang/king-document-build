@@ -17,11 +17,11 @@ func init() {
 		revel.ValidationFilter,        // Restore kept validation errors and save new ones from cookie.
 		revel.I18nFilter,              // Resolve the requested language
 		func(c *revel.Controller, fc []revel.Filter) {
-			locale := c.RenderArgs[revel.CurrentLocaleRenderArg]
+			locale := c.ViewArgs[revel.CurrentLocaleViewArg]
 			if locale != "zh-TW" &&
 				locale != "en" {
 				c.Request.Locale = "zh-TW"
-				c.RenderArgs[revel.CurrentLocaleRenderArg] = "zh-TW"
+				c.ViewArgs[revel.CurrentLocaleViewArg] = "zh-TW"
 			}
 			fc[0](c, fc[1:])
 		},

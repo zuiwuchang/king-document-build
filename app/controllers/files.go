@@ -11,10 +11,10 @@ type Files struct {
 	*revel.Controller
 }
 
-func (c Files) Upload(id int64, dir string) revel.Result {
-	file, header, err := c.Request.FormFile("imgFile")
+func (this Files) Upload(id int64, dir string) revel.Result {
+	file, header, err := this.Request.FormFile("imgFile")
 	if err != nil {
-		return c.RenderJson(struct {
+		return this.RenderJSON(&struct {
 			Error   int    `json:"error"`
 			Message string `json:"message"`
 		}{1, err.Error()})
@@ -24,26 +24,26 @@ func (c Files) Upload(id int64, dir string) revel.Result {
 
 	var mFiles manipulator.Files
 	if err := mFiles.Upload(id, dir, filename, file); err != nil {
-		return c.RenderJson(struct {
+		return this.RenderJSON(&struct {
 			Error   int    `json:"error"`
 			Message string `json:"message"`
 		}{1, err.Error()})
 	}
 
-	return c.RenderJson(struct {
+	return this.RenderJSON(&struct {
 		Error int    `json:"error"`
 		Url   string `json:"url"`
 	}{0, fmt.Sprintf("sections/%v/%s/%s", id, dir, filename)})
 }
-func (c Files) Find(id int64, order, dir string) revel.Result {
+func (this Files) Find(id int64, order, dir string) revel.Result {
 	var files data.Files
 	var mFiles manipulator.Files
 	if err := mFiles.Find(&files, id, order, dir); err != nil {
-		return c.RenderJson(struct {
+		return this.RenderJSON(&struct {
 			Error   int    `json:"error"`
 			Message string `json:"message"`
 		}{1, err.Error()})
 	}
 
-	return c.RenderJson(files)
+	return this.RenderJSON(&files)
 }

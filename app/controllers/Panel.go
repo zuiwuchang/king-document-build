@@ -13,12 +13,12 @@ type Panel struct {
 	*revel.Controller
 }
 
-func (c Panel) AjaxNew(chapter int64, name string) revel.Result {
+func (this Panel) AjaxNew(chapter int64, name string) revel.Result {
 	var result ajax.Result
 	if chapter == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "chapter id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mPanel manipulator.Panel
 	bean := data.Panel{Name: name, Chapter: chapter}
@@ -28,14 +28,14 @@ func (c Panel) AjaxNew(chapter int64, name string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Panel) AjaxRename(id int64, name string) revel.Result {
+func (this Panel) AjaxRename(id int64, name string) revel.Result {
 	var result ajax.Result
 	if id == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "panel id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mPanel manipulator.Panel
 	bean := data.Panel{Id: id, Name: name}
@@ -43,9 +43,9 @@ func (c Panel) AjaxRename(id int64, name string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Panel) AjaxSort(sort string) revel.Result {
+func (this Panel) AjaxSort(sort string) revel.Result {
 	var result ajax.Result
 
 	strs := strings.Split(sort, "-")
@@ -58,11 +58,11 @@ func (c Panel) AjaxSort(sort string) revel.Result {
 		if id, err := strconv.ParseInt(str, 10, 64); err != nil {
 			result.Code = ajax.CODE_ERROR
 			result.Emsg = err.Error()
-			return c.RenderJson(result)
+			return this.RenderJSON(&result)
 		} else if id == 0 {
 			result.Code = ajax.CODE_ERROR
 			result.Emsg = "panel id not found (0)"
-			return c.RenderJson(result)
+			return this.RenderJSON(&result)
 		} else {
 			ids = append(ids, id)
 		}
@@ -70,31 +70,31 @@ func (c Panel) AjaxSort(sort string) revel.Result {
 	if len(ids) == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "panel sort cann't be empty"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mPanel manipulator.Panel
 	if err := mPanel.Sort(ids); err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Panel) AjaxRemove(id int64) revel.Result {
+func (this Panel) AjaxRemove(id int64) revel.Result {
 	var result ajax.Result
 
 	if id == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "panel id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mPanel manipulator.Panel
 	if err := mPanel.Remove(id); err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }

@@ -13,12 +13,12 @@ type Section struct {
 	*revel.Controller
 }
 
-func (c Section) AjaxNew(panel int64, name string) revel.Result {
+func (this Section) AjaxNew(panel int64, name string) revel.Result {
 	var result ajax.Result
 	if panel == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "panel id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mSection manipulator.Section
 	bean := data.Section{Name: name, Panel: panel}
@@ -28,14 +28,14 @@ func (c Section) AjaxNew(panel int64, name string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Section) AjaxFind(panel int64) revel.Result {
+func (this Section) AjaxFind(panel int64) revel.Result {
 	var result ajax.ResultSections
 	if panel == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "panel id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mSection manipulator.Section
 	if err := mSection.Find(panel, &result.Data); err != nil {
@@ -47,31 +47,31 @@ func (c Section) AjaxFind(panel int64) revel.Result {
 		mSection.Read(&(result.Data[i]))
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Section) AjaxSave(id int64, val string) revel.Result {
+func (this Section) AjaxSave(id int64, val string) revel.Result {
 	var result ajax.Result
 	if id == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "section id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
 	var mSection manipulator.Section
 	if err := mSection.Save(id, val); err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Section) AjaxRename(id int64, name string) revel.Result {
+func (this Section) AjaxRename(id int64, name string) revel.Result {
 	var result ajax.Result
 	if id == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "section id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mSection manipulator.Section
 	bean := data.Section{Id: id, Name: name}
@@ -79,9 +79,9 @@ func (c Section) AjaxRename(id int64, name string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Section) AjaxSort(sort string) revel.Result {
+func (this Section) AjaxSort(sort string) revel.Result {
 	var result ajax.Result
 
 	strs := strings.Split(sort, "-")
@@ -94,11 +94,11 @@ func (c Section) AjaxSort(sort string) revel.Result {
 		if id, err := strconv.ParseInt(str, 10, 64); err != nil {
 			result.Code = ajax.CODE_ERROR
 			result.Emsg = err.Error()
-			return c.RenderJson(result)
+			return this.RenderJSON(&result)
 		} else if id == 0 {
 			result.Code = ajax.CODE_ERROR
 			result.Emsg = "section id not found (0)"
-			return c.RenderJson(result)
+			return this.RenderJSON(&result)
 		} else {
 			ids = append(ids, id)
 		}
@@ -106,31 +106,31 @@ func (c Section) AjaxSort(sort string) revel.Result {
 	if len(ids) == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "section sort cann't be empty"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mSection manipulator.Section
 	if err := mSection.Sort(ids); err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Section) AjaxRemove(id int64) revel.Result {
+func (this Section) AjaxRemove(id int64) revel.Result {
 	var result ajax.Result
 
 	if id == 0 {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = "section id not found (0)"
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 	var mSection manipulator.Section
 	if err := mSection.Remove(id); err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }

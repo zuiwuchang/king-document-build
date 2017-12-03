@@ -13,16 +13,16 @@ type Tag struct {
 	*revel.Controller
 }
 
-func (c Tag) Admin() revel.Result {
+func (this Tag) Admin() revel.Result {
 	var tags []data.Tag
 	var mTag manipulator.Tag
 	err := mTag.Find(&tags)
 	if err != nil {
-		return c.RenderError(err)
+		return this.RenderError(err)
 	}
-	return c.Render(tags)
+	return this.Render(tags)
 }
-func (c Tag) AjaxCreate(pid int64, name string) revel.Result {
+func (this Tag) AjaxCreate(pid int64, name string) revel.Result {
 	var result ajax.Result
 
 	tag := data.Tag{Pid: pid, Name: name}
@@ -35,9 +35,9 @@ func (c Tag) AjaxCreate(pid int64, name string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Tag) AjaxRename(id int64, name string) revel.Result {
+func (this Tag) AjaxRename(id int64, name string) revel.Result {
 	var result ajax.Result
 	tag := data.Tag{Id: id, Name: name}
 	var mTag manipulator.Tag
@@ -46,9 +46,9 @@ func (c Tag) AjaxRename(id int64, name string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Tag) AjaxMove(id, pid int64) revel.Result {
+func (this Tag) AjaxMove(id, pid int64) revel.Result {
 	var result ajax.Result
 	var mTag manipulator.Tag
 	err := mTag.Move(id, pid)
@@ -56,9 +56,9 @@ func (c Tag) AjaxMove(id, pid int64) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Tag) AjaxRemove(id int64) revel.Result {
+func (this Tag) AjaxRemove(id int64) revel.Result {
 	var result ajax.Result
 	var mTag manipulator.Tag
 	err := mTag.Remove(id)
@@ -66,9 +66,9 @@ func (c Tag) AjaxRemove(id int64) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Tag) AjaxSort(str string) revel.Result {
+func (this Tag) AjaxSort(str string) revel.Result {
 	var result ajax.Result
 
 	var sorts []data.Sort
@@ -76,7 +76,7 @@ func (c Tag) AjaxSort(str string) revel.Result {
 	if err != nil {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
-		return c.RenderJson(result)
+		return this.RenderJSON(&result)
 	}
 
 	var mTag manipulator.Tag
@@ -85,9 +85,9 @@ func (c Tag) AjaxSort(str string) revel.Result {
 		result.Code = ajax.CODE_ERROR
 		result.Emsg = err.Error()
 	}
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
-func (c Tag) AjaxGetDocs(tag int64) revel.Result {
+func (this Tag) AjaxGetDocs(tag int64) revel.Result {
 	var result ajax.ResultDocs
 	var mDoc manipulator.Document
 	if err := mDoc.FindByTag(tag, &result.Data); err != nil {
@@ -95,5 +95,5 @@ func (c Tag) AjaxGetDocs(tag int64) revel.Result {
 		result.Emsg = err.Error()
 	}
 
-	return c.RenderJson(result)
+	return this.RenderJSON(&result)
 }
