@@ -2,9 +2,9 @@ package app
 
 import (
 	"errors"
-	//_ "github.com/denisenkom/go-mssqldb"
+	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/go-sql-driver/mysql"
-	//_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/revel/revel"
 	"king-document-build/app/controllers"
 	"king-document-build/app/modules/db/manipulator"

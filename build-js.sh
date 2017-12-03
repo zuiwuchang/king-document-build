@@ -102,7 +102,7 @@ function BuildJs(){
 
 	echo "***	build-js begin	***"
 	echo "---	build $1	---"
-	java -jar $CLOSURE_COMPILER --js $1 --js_output_file $2
+	java -jar $ClosureCompiler --js $1 --js_output_file $2
 
 	ok=$?
 	if [[ $ok != 0 ]];then
@@ -125,7 +125,7 @@ function BuildFilter(){
 	name=${1:0:len}
 
 	echo "---	build $name.js	---"
-	java -jar $CLOSURE_COMPILER --js $name.js --js_output_file $name.min.js 
+	java -jar $ClosureCompiler --js $name.js --js_output_file $name.min.js 
 }
 
 ok=0
