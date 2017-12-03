@@ -1,11 +1,10 @@
 package manipulator
 
 import (
-	//_ "github.com/denisenkom/go-mssqldb"
+	"crypto/sha512"
+	"encoding/hex"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
-	//_ "github.com/mattn/go-sqlite3"
 	"github.com/revel/revel"
 	"king-document-build/app/modules/db/data"
 	"strings"
@@ -14,9 +13,13 @@ import (
 
 var g_engine *xorm.Engine
 var g_RootPath string
+var g_Pwd string
 
 func GetRootPath() string {
 	return g_RootPath
+}
+func GetPwd() string {
+	return g_Pwd
 }
 func Initialize() {
 	//get configure
@@ -25,6 +28,14 @@ func Initialize() {
 		g_RootPath = revel.BasePath + "/document"
 	} else if !strings.HasPrefix(g_RootPath, "/") {
 		g_RootPath = revel.BasePath + "/" + g_RootPath
+	}
+	g_Pwd, _ = revel.Config.String("safe.pwd")
+	g_Pwd = strings.TrimSpace(g_Pwd)
+	if g_Pwd != "" {
+		sha := sha512.New()
+		sha.Write([]byte(g_Pwd))
+		g_Pwd = hex.EncodeToString(sha.Sum(nil))
+		revel.INFO.Println("pwd =", g_Pwd)
 	}
 
 	driver, _ := revel.Config.String("db.driver")

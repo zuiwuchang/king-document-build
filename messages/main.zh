@@ -2,6 +2,7 @@
 Sure=確定
 Cancel=取消
 Code=代碼
+Permission denied=沒有權限
 
 data is hide=數據已隱藏 ...
 data is none=沒有數據
@@ -124,3 +125,8 @@ offline.ok=檔案創建成功
 
 offline.restore.title=恢復數據庫
 offline.restore.ok=數據庫恢復成功
+
+#login
+login.title=登入
+login.input pwd=請輸入密碼
+login.error=密碼不匹配

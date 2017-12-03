@@ -28,3 +28,20 @@
 
 </head>
 <body class="k-body">
+
+<style type="text/css">
+#idGoDo {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+</style>
+{{ if .session.pwd}}
+<a id="idGoDo" href="/App/Out">
+	<span class="glyphicon glyphicon-off"></span>
+</a>
+{{else}}
+<a id="idGoDo" href="/App/Login">
+	<span class="glyphicon glyphicon-circle-arrow-right"></span>
+</a>
+{{end}}

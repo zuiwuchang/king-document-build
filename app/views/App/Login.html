@@ -1,0 +1,56 @@
+{{set . "title" (msg . "login.title")}}
+{{template "header.html" .}}
+
+
+
+<div class="container k-view">
+	<div class="jumbotron" id="idDropView">
+	<h1>welcome king</h1>
+
+<form action="/App/DoLogin" method="POST">
+	<p>
+		<div class="input-group">
+			<span id="idLabelPwd" class="input-group-addon">
+				<a href="#">
+				<span id="idLabelPwdView" class="glyphicon glyphicon-eye-open"></span>
+				</a>
+			</span>
+			<input name="kingDocBuildPwd" type="text" class="form-control" id="idValPwd" placeholder='({{msg . "login.input pwd"}})'aria-describedby="idLabelPwd">
+		
+			<span class="input-group-btn">
+			<button class="btn btn-default" type="submit">Go!</button>
+			</span>
+		</div>
+	</p>
+</form>
+
+	</div>
+</div>
+{{template "footer.html" .}}
+
+<script src="/public/js/CryptoJS-v3.1.2/rollups/sha512.js"></script>
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/msg.js"></script>
+
+	<script src="/public/views/App/Login.js"></script>
+{{else}}
+	<script src="/public/views/msg.min.js"></script>
+
+	<script src="/public/views/App/Login.min.js"></script>
+{{end}}
+<script type="text/javascript">
+$(document).ready(function() {
+	NewContext({
+		Language:{
+			"Sure":{{msg . "Sure"}},
+			"Cancel":{{msg . "Cancel"}},
+
+			"e":{{msg . "login.error"}},
+		},
+{{if .flash.e}}
+		Error:true,
+{{end}}
+	});
+});
+</script>
