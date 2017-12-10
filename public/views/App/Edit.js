@@ -7,28 +7,58 @@ var NewContext = function(initObj){
 	var KeyBars = [
 		{
 			"bar":"bar",
-			"tab":"	",
+			
+			"pre":{
+				"l":"<pre class='k-pre'>",
+				"r":"</pre>",
+				"text":"XXXXXX",
+			},
+			"div":{
+				"l":"<div>",
+				"r":"</div>",
+				"text":"XXXXXX",
+			},
+			"p":{
+				"l":"<p>",
+				"r":"</p>",
+				"text":"XXXXXX",
+			},
 		},	
 		{
-			"pre":"<pre class='k-pre'>XXXXXX</pre>",
-			"pre-l":"<pre class='k-pre'>",
-			"pre-r":"</pre>",
+			"tab":"	",
+			"br":"<br>",
+			"strong":{
+				"l":"<strong>",
+				"r":"</strong>",
+				"text":"XXXXXX",
+			},
+			"a":{
+				"l":"<a href='XXXXXX' target='_blank'>",
+				"r":"</a>",
+				"text":"XXXXXX",
+			},
 		},
 		{
-			"strong":"<strong>XXXXXX</strong>",
-			"strong-l":"<strong>",
-			"strong-r":"</strong>",
-		},
-		{
-			"ol":"<ol>XXXXXX</ol>",
-			"ul":"<ul>XXXXXX</ul>",
-			"li":"<li>XXXXXX</li>",
-		},
-		{
-			"div":"<div>XXXXXX</div>",
-			"p":"<p>XXXXXX</p>",
-			"span":"<span>XXXXXX</span>",
-			"a":"<a href='XXXXXX' target='_blank'>XXXXXX</a>",
+			"span":{
+				"l":"<span>",
+				"r":"</span>",
+				"text":"XXXXXX",
+			},
+			"ol":{
+				"l":"<ol>",
+				"r":"</ol>",
+				"text":"XXXXXX",
+			},
+			"ul":{
+				"l":"<ul>",
+				"r":"</ul>",
+				"text":"XXXXXX",
+			},
+			"li":{
+				"l":"<li>",
+				"r":"</li>",
+				"text":"XXXXXX",
+			},
 		},
 	];
 	var KeyBar = {
@@ -624,7 +654,7 @@ var NewContext = function(initObj){
 								var keys = KeyBars[i];
 								for(var key in keys){
 									if(key == "bar"){
-										html.push("<td><a href='#" + key + "' class='glyphicon glyphicon-minus-sign'></a></td>");
+										html.push("<td><a href='#" + key + "' class='glyphicon glyphicon-plus-sign'></a></td>");
 									}else{
 										html.push("<td><a href='#" + key + "'>" + key + "</a></td>");
 									}
@@ -713,13 +743,27 @@ var NewContext = function(initObj){
 						jqText.val(jqText.val() + html);
 						jqText.focus();
 					},
-					insert:function(str){
+					insert:function(obj){
 						var doc = jqText.get()[0];
 						var start = doc.selectionStart;
 						var end = doc.selectionEnd;
 						var val = doc.value;
-						doc.value = val.substring(0,start) + str + val.substring(end,val.length);
-						doc.selectionStart = doc.selectionEnd = str.length + start;
+						if(typeof(obj) == "object"){
+							var middle = val.substring(start,end);
+							if(middle == ""){
+								middle = obj.text;
+							}
+							doc.value = val.substring(0,start) + 
+								obj.l +
+									middle + 
+								obj.r + 
+								val.substring(end,val.length);
+
+							doc.selectionStart = doc.selectionEnd = obj.l.length + obj.r.length + start + middle.length;
+						}else{
+							doc.value = val.substring(0,start) + obj + val.substring(end,val.length);
+							doc.selectionStart = doc.selectionEnd = obj.length + start;
+						}
 						jqText.focus();
 					},
 				};
@@ -900,7 +944,7 @@ var NewContext = function(initObj){
 				jqSectionView.html(html);
 				newObj.UpdateStatus(html);
 			};
-			var _barNo = true;
+			var _barNo = false;
 			jqSectionStatus.find('a').click(function(event) {
 				var cmd = $(this).attr('href');
 				cmd = cmd.substring(1);

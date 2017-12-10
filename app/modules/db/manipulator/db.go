@@ -46,6 +46,7 @@ func Initialize() {
 	if source == "" {
 		panic("db.source not configure at app.conf")
 	}
+	cache, _ := revel.Config.Int("db.cache")
 	if driver == "sqlite3" {
 		if !strings.HasPrefix(source, "/") {
 			source = GetRootPath() + "/" + source
@@ -61,6 +62,12 @@ func Initialize() {
 	}
 	if err = g_engine.Ping(); err != nil {
 		panic(err)
+	}
+	//cache
+	if cache > 0 {
+		store := xorm.NewMemoryStore()
+		cacher := xorm.NewLRUCacher(store, cache)
+		g_engine.SetDefaultCacher(cacher)
 	}
 
 	//show sql
