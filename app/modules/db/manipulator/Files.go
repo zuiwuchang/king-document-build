@@ -2,6 +2,7 @@ package manipulator
 
 import (
 	"fmt"
+	"github.com/zuiwuchang/king-go/os/fileperm"
 	"io"
 	"king-document-build/app/modules/db/data"
 	"os"
@@ -130,7 +131,7 @@ func (f *Files) Upload(id int64, dir, name string, r io.Reader) error {
 
 	strPath := fmt.Sprintf("%s/sections/%v/%s/%s", GetRootPath(), id, dir, name)
 	strDir := fmt.Sprintf("%s/sections/%v/%s", GetRootPath(), id, dir)
-	os.MkdirAll(strDir, 0774)
+	os.MkdirAll(strDir, fileperm.Directory)
 	file, err := os.Create(strPath)
 	if err != nil {
 		return err

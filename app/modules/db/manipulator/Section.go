@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-xorm/xorm"
+	"github.com/zuiwuchang/king-go/os/fileperm"
 	"io/ioutil"
 	"king-document-build/app/modules/db/data"
 	"os"
@@ -41,7 +42,7 @@ func (s *Section) New(bean *data.Section) error {
 		return err
 	}
 	dir := GetRootPath() + "/sections/" + fmt.Sprint(bean.Id)
-	if err = os.MkdirAll(dir, 0774); err != nil {
+	if err = os.MkdirAll(dir, fileperm.Directory); err != nil {
 		return nil
 	}
 	return nil
