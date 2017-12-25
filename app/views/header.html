@@ -29,19 +29,75 @@
 </head>
 <body class="k-body">
 
-<style type="text/css">
-#idGoDo {
-	position: absolute;
-	right: 20px;
-	top: 20px;
-}
-</style>
-{{ if .session.pwd}}
-<a id="idGoDo" href="/App/Out">
-	<span class="glyphicon glyphicon-off"></span>
-</a>
+<div class="container">
+<nav class="navbar navbar-default">
+<div class="container-fluid">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/">{{msg . "Home"}}</a>
+	</div>
+
+<!-- Collect the nav links, forms, and other content for toggling -->
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+	<ul class="nav navbar-nav">
+		<li><a href="/App/Contact">{{msg . "Contact me"}}</a></li>
+		<li><a href="/App/About">{{msg . "About"}}</a></li>
+		<li><a href="/App/License">{{msg . "License"}}</a></li>
+	</ul>
+
+	<ul class="nav navbar-nav navbar-right">
+{{if .session.pwd}}
+		<li><a href="/App/out">{{msg . "Logout"}}</a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{msg . "Manage"}} <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li><a href="/Document/New">{{msg . "app.New"}}</a></li>
+				<li><a href="/Tag/Admin">{{msg . "app.Tags"}}</a></li>
+
+				<li role="separator" class="divider"></li>
+				<li><a id="idAOffline" href="#">{{msg . "app.Create Offline"}}</a></li>
+
+				<li role="separator" class="divider"></li>
+				<li><a id="idARestore" href="#">{{msg . "app.Restore DB"}}</a></li>
+			</ul>
+		</li>
 {{else}}
-<a id="idGoDo" href="/App/Login">
-	<span class="glyphicon glyphicon-circle-arrow-right"></span>
-</a>
+		<li><a href="/App/Login">{{msg . "Login"}}</a></li>
 {{end}}
+	</ul>
+</div><!-- /.navbar-collapse -->
+</div><!-- /.container-fluid -->
+</nav>
+</div>
+
+{{if eq .RunMode "dev"}}
+	<script src="/public/views/msg.js"></script>
+
+	<script src="/public/views/header.js"></script>
+{{else}}
+	<script src="/public/views/msg.min.js"></script>
+
+	<script src="/public/views/header.min.js"></script>
+{{end}}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	NewHeader({
+		Language:{
+			"Sure":{{msg . "Sure"}},
+			"Cancel":{{msg . "Cancel"}},
+
+			"msg warning":{{msg . "msg warning"}},
+			"offline":{{msg . "app.sure? offline"}},
+			"restore":{{msg . "app.sure? restore"}},
+		},
+	});
+});
+</script>

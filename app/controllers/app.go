@@ -12,7 +12,17 @@ type App struct {
 	*revel.Controller
 }
 
-func (this App) Index() revel.Result {
+/*func (this App) Index() revel.Result {
+	return this.Render()
+}*/
+func (this App) Contact() revel.Result {
+	return this.Render()
+}
+func (this App) License() revel.Result {
+	license := manipulator.GetLicense()
+	return this.Render(license)
+}
+func (this App) About() revel.Result {
 	return this.Render()
 }
 
@@ -94,7 +104,7 @@ func (this App) Document(id int64) revel.Result {
 }
 func (this App) Login() revel.Result {
 	if pwd, ok := this.Session["pwd"]; ok && pwd == manipulator.GetPwd() {
-		return this.Redirect(App.Index)
+		return this.Redirect("/")
 	}
 	return this.Render()
 }
@@ -103,12 +113,12 @@ func (this App) Out() revel.Result {
 		delete(this.Session, k)
 	}
 
-	return this.Redirect(App.Index)
+	return this.Redirect("/")
 }
 func (this App) DoLogin(kingDocBuildPwd string) revel.Result {
 	if kingDocBuildPwd == manipulator.GetPwd() {
 		this.Session["pwd"] = kingDocBuildPwd
-		return this.Redirect(App.Index)
+		return this.Redirect("/")
 	}
 	delete(this.Session, "pwd")
 

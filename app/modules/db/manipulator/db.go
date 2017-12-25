@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-xorm/xorm"
 	"github.com/revel/revel"
+	"io/ioutil"
 	"king-document-build/app/modules/db/data"
 	"strings"
 	"time"
@@ -14,7 +15,11 @@ import (
 var g_engine *xorm.Engine
 var g_RootPath string
 var g_Pwd string
+var g_License string
 
+func GetLicense() string {
+	return g_License
+}
 func GetRootPath() string {
 	return g_RootPath
 }
@@ -22,6 +27,12 @@ func GetPwd() string {
 	return g_Pwd
 }
 func Initialize() {
+	b, e := ioutil.ReadFile(revel.BasePath + "/" + "LICENSE")
+	if e != nil {
+		panic(e)
+	}
+	g_License = string(b)
+
 	//get configure
 	g_RootPath, _ = revel.Config.String("path.root")
 	if g_RootPath == "" {

@@ -21,9 +21,9 @@ func init() {
 		revel.SessionFilter,           // Restore and write the session cookie.
 		revel.FlashFilter,             // Restore and write the flash cookie.
 		revel.ValidationFilter,        // Restore kept validation errors and save new ones from cookie.
-		revel.I18nFilter,              // Resolve the requested language
+		//revel.I18nFilter,              // Resolve the requested language
 		func(c *revel.Controller, fc []revel.Filter) {
-			locale := (c.ViewArgs[revel.CurrentLocaleViewArg]).(string)
+			/*locale := (c.ViewArgs[revel.CurrentLocaleViewArg]).(string)
 			if locale != "zh-TW" &&
 				locale != "en" {
 
@@ -36,7 +36,11 @@ func init() {
 
 				c.Request.Locale = locale
 				c.ViewArgs[revel.CurrentLocaleViewArg] = locale
-			}
+			}*/
+			locale := "zh-TW"
+			c.Request.Locale = locale
+			c.ViewArgs[revel.CurrentLocaleViewArg] = locale
+
 			fc[0](c, fc[1:])
 		},
 		HeaderFilter,            // Add some security based headers
@@ -63,8 +67,10 @@ func init() {
 			revel.InterceptFunc(checkPwd, revel.BEFORE, &controllers.Files{})
 
 			g_Free = make(map[string]bool)
-			g_Free["/index"] = true
-			g_Free["/app/index"] = true
+
+			g_Free["/app/contact"] = true
+			g_Free["/app/about"] = true
+			g_Free["/app/license"] = true
 
 			g_Free["/login"] = true
 			g_Free["/app/login"] = true
@@ -80,9 +86,7 @@ func init() {
 
 			g_Free["/tag/ajaxgetdocs"] = true
 			g_Free["/document/index"] = true
-
 			g_Free["/chapter"] = true
-			g_Free["/section/ajaxfind"] = true
 
 		}
 	})

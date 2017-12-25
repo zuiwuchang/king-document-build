@@ -1,0 +1,32 @@
+{{set . "title" "About"}}
+{{template "header.html" .}}
+<style type="text/css">
+.kp-license{
+	word-wrap: break-word;
+	white-space : normal;
+}
+.k-license{
+	border: none;
+	background: transparent;
+	padding: 0px;
+	color: #888888;
+	font-size: 14px;
+	padding: 8px;
+
+	white-space:pre-wrap;  
+	white-space:-moz-pre-wrap;  
+	white-space:-pre-wrap;  
+	white-space:-o-pre-wrap;  
+	word-wrap:break-word;  
+}
+</style>
+<div class="container kp-license">
+
+<pre class="k-license">
+{{.license}}
+</pre>
+
+</div>
+{{template "footer.html" .}}
+
+
