@@ -51,6 +51,18 @@ func (s *Section) New(bean *data.Section) error {
 func (s *Section) Find(panel int64, beans *[]data.Section) error {
 	return GetEngine().Where("panel = ?", panel).Desc("Sort").Find(beans)
 }
+func (s *Section) FindEx(panel int64, beans *[]data.Section) error {
+	e := GetEngine().Where("panel = ?", panel).Desc("Sort").Find(beans)
+	if e != nil {
+		return e
+	}
+
+	for i := 0; i < len(*beans); i++ {
+		path := GetRootPath() + "/sections/" + fmt.Sprint((*beans)[i].Id) + ".txt"
+		s.readFile(path, &(*beans)[i].Str)
+	}
+	return nil
+}
 func (s *Section) Read(bean *data.Section) {
 	path := GetRootPath() + "/sections/" + fmt.Sprint(bean.Id) + ".txt"
 	s.readFile(path, &bean.Str)
@@ -70,7 +82,7 @@ func (s *Section) Save(id int64, val string) error {
 		}
 	}()
 	var has bool
-	if has, err = session.ID(id).Cols("id").Get(&data.Section{}); err != nil {
+	if has, err = session.ID(id).Get(&data.Section{}); err != nil {
 		return err
 	} else if !has {
 		return fmt.Errorf("section id not found (%v)", id)
@@ -139,7 +151,7 @@ func (s *Section) Sort(ids []int64) error {
 	n := int64(len(ids))
 	var has bool
 	for _, id := range ids {
-		if has, err = session.Id(id).Cols("id").Get(&data.Section{}); err != nil {
+		if has, err = session.Id(id).Get(&data.Section{}); err != nil {
 			return err
 		} else if !has {
 			return fmt.Errorf("section id not found (%v)", id)

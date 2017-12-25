@@ -34,7 +34,38 @@
 	</div>
 </div>
 
-<div id="idPanelsView"></div>
+<div id="idPanelsView">
+{{$ctx:=.}}
+{{range $panel :=.panels}}
+	<div class='panel panel-default' id="idPanel-{{$panel.Id}}">
+		<a name='panel-{{$panel.Id}}'></a>
+
+		<div class='panel-heading'>
+			<span class='glyphicon glyphicon-asterisk kBtnSpan kBtnTop'></span>
+			<span class='kBtnSpan kBtnMenuHide'>{{$panel.Name}}</span>
+		</div>
+
+		<div class='panel-body'>
+			<div class='kPanelHide' style='display: none;'>{{msg $ctx "data is hide"}}</div>
+			<div class='kPanelBody'>
+<div class='kPanelBodyView'>
+{{range $section :=$panel.Section}}
+	<div id="idSection-{{$section.Id}}">
+		<h4>
+			<span class='kBtnSpan'>{{$section.Name}}</span>
+		</h4>
+		<div class='kSectionHide'>{{msg $ctx  "data is hide"}}</div>
+		<div class='kSectionBody'>
+			<div class='kSectionView'>{{raw $section.Str}}</div>
+		</div>
+	</div>
+{{end}}
+</div>
+			</div>
+		</div>
+	</div>
+{{end}}
+</div>
 
 </div>
 
@@ -63,19 +94,18 @@
 $(document).ready(function() {
 	var title  = '{{.document.Name}}' + ' - ' + '{{.chapter.Name}}';
 	document.title = title;
-	NewContext({
-		Language:{
-			"err net":{{msg . "err net"}},
 
-			"data is hide":{{msg . "data is hide"}},
-			"wait init data":{{msg . "chapter.edit.wait init data"}},
-		},
+	NewContext({
 		Panels:[
 {{range .panels}}
-			{
-				Id:{{.Id}},
-				Name:{{.Name}},
-			},
+		{
+			"Id":{{.Id}},
+			"Section":[
+{{range .Section}}
+				{{.Id}},
+{{end}}
+			],
+		},
 {{end}}
 		],
 	});

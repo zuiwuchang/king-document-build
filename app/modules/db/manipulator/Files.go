@@ -123,7 +123,7 @@ func (f *Files) sortName(slice []data.File) {
 	}
 }
 func (f *Files) Upload(id int64, dir, name string, r io.Reader) error {
-	if has, err := GetEngine().Id(id).Cols("id").Get(&data.Section{}); err != nil {
+	if has, err := GetEngine().Id(id).Get(&data.Section{}); err != nil {
 		return err
 	} else if !has {
 		return fmt.Errorf("section id not found (%v)", id)

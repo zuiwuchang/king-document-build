@@ -44,6 +44,27 @@ type Panel struct {
 	Sort int64
 }
 
+//檔案 面板節點
+type PanelEx struct {
+	//唯一標識
+	Id int64
+
+	//所屬章節 id
+	Chapter int64
+
+	//面板名稱
+	Name string
+
+	//面板 顯示 順序
+	Sort int64
+
+	Section []Section `xorm:"-"`
+}
+
+func (PanelEx) TableName() string {
+	return "panel"
+}
+
 //面板 節點
 type Section struct {
 	//唯一標識

@@ -40,6 +40,23 @@ func (p *Panel) New(bean *data.Panel) error {
 func (p *Panel) Find(chapter int64, beans *[]data.Panel) error {
 	return GetEngine().Where("chapter = ?", chapter).Desc("Sort").Find(beans)
 }
+func (p *Panel) FindEx(chapter int64, beans *[]data.PanelEx) error {
+	e := GetEngine().
+		Where("chapter = ?", chapter).
+		Desc("Sort").
+		Find(beans)
+	if e != nil {
+		return e
+	}
+	var mSection Section
+	for i := 0; i < len(*beans); i++ {
+		e = mSection.FindEx((*beans)[i].Id, &((*beans)[i].Section))
+		if e != nil {
+			return e
+		}
+	}
+	return nil
+}
 func (p *Panel) Rename(bean *data.Panel) error {
 	if n, err := GetEngine().Id(bean.Id).MustCols("name").Update(bean); err != nil {
 		return err
@@ -66,7 +83,7 @@ func (p *Panel) Sort(ids []int64) error {
 	n := int64(len(ids))
 	var has bool
 	for _, id := range ids {
-		if has, err = session.Id(id).Cols("id").Get(&data.Panel{}); err != nil {
+		if has, err = session.Id(id).Get(&data.Panel{}); err != nil {
 			return err
 		} else if !has {
 			return fmt.Errorf("panel id not found (%v)", id)

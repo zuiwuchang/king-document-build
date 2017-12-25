@@ -53,9 +53,9 @@ func (this App) Edit(id int64) revel.Result {
 		return this.RenderError(fmt.Errorf("document id not found (%v)", chapter.Doc))
 	}
 
-	var panels []data.Panel
+	var panels []data.PanelEx
 	var mPanel manipulator.Panel
-	if err := mPanel.Find(id, &panels); err != nil {
+	if err := mPanel.FindEx(id, &panels); err != nil {
 		return this.RenderError(err)
 	}
 
@@ -81,9 +81,9 @@ func (this App) Chapter(id int64) revel.Result {
 		return this.RenderError(fmt.Errorf("document id not found (%v)", chapter.Doc))
 	}
 
-	var panels []data.Panel
+	var panels []data.PanelEx
 	var mPanel manipulator.Panel
-	if err := mPanel.Find(id, &panels); err != nil {
+	if err := mPanel.FindEx(id, &panels); err != nil {
 		return this.RenderError(err)
 	}
 

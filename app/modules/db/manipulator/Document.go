@@ -68,7 +68,7 @@ func (d *Document) Modify(bean *data.Document) error {
 
 	var doc data.Document
 	var has bool
-	if has, err = session.Id(bean.Id).Cols("tag").Get(&doc); err != nil {
+	if has, err = session.Id(bean.Id).Get(&doc); err != nil {
 		return err
 	} else if !has {
 		err = fmt.Errorf("document id not found (%v)", bean.Id)
@@ -79,7 +79,7 @@ func (d *Document) Modify(bean *data.Document) error {
 		if doc.Tag != 0 {
 			var tag data.Tag
 			id := doc.Tag
-			if has, err = session.Id(id).Cols("docs").Get(&tag); err != nil {
+			if has, err = session.Id(id).Get(&tag); err != nil {
 				return err
 			} else if !has {
 				err = fmt.Errorf("tag id not found (%v)", id)
@@ -97,7 +97,7 @@ func (d *Document) Modify(bean *data.Document) error {
 		if bean.Tag != 0 {
 			var tag data.Tag
 			id := bean.Tag
-			if has, err = session.Id(id).Cols("docs").Get(&tag); err != nil {
+			if has, err = session.Id(id).Get(&tag); err != nil {
 				return err
 			} else if !has {
 				err = fmt.Errorf("tag id not found (%v)", id)
